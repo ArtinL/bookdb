@@ -40,6 +40,7 @@ const SearchBar: React.FC<SearchBarProps> = ({onSearch}) => {
         <div>
             <input placeholder={query} type="text" value={query} onChange={(e) => setQuery(e.target.value)}
                    onKeyDown={handleKeyDown}/>
+            <button ref={searchButtonRef} onClick={handleSearch}>Search</button>
             <button onClick={handleToggleAdvancedSearch}>
                 {showAdvancedSearch ? 'Hide Advanced' : 'Show Advanced'}
             </button>
@@ -56,7 +57,7 @@ const SearchBar: React.FC<SearchBarProps> = ({onSearch}) => {
                     <button onClick={handleClearFilters}>Clear Filters</button>
                 </div>
             )}
-            <button ref={searchButtonRef} onClick={handleSearch}>Search</button>
+
         </div>
     );
 };

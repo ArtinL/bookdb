@@ -12,10 +12,14 @@ const BookListItem: React.FC<ItemProps> = (props: any) => {
 
     return (
         <div>
-            <h3>Title: {book.title}</h3>
+            <img
+                src={book.imageLinks != null ? book.imageLinks.thumbnail : 'https://via.placeholder.com/128x192.png?text=No%20Cover'}
+                alt={book.title}/>
+            <h3>{book.title}</h3>
             {<p>Authors: {book.authors != null ? book.authors.join(', ') : 'Unknown'}</p>}
             <p>Published Date: {new Date(book.publishedDate).toLocaleDateString()}</p>
             <Link to={`/book`} state={{bookData: book}}> Details </Link>
+            <hr/>
 
 
         </div>

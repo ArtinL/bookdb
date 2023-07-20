@@ -11,10 +11,10 @@ const Results: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
-    const query = queryParams.get('query') || '';
-    const category = queryParams.get('category') || '';
+    const query: string = queryParams.get('query') || '';
+    const category: string = queryParams.get('category') || '';
 
-    useEffect(() => {
+    useEffect((): void => {
         const fetchResults = async () => {
             console.log('Fetching results...' + query);
             try {
@@ -32,7 +32,7 @@ const Results: React.FC = () => {
     const filterResults = (results: Book[]): Book[] => {
         if (category) {
             // Filter the results based on the category
-            return results.filter((book) => book.categories?.includes(category));
+            return results.filter((book: Book) => book.categories?.includes(category));
         }
         return results;
     };

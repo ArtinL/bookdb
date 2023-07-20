@@ -23,7 +23,9 @@ const BookDetails: React.FC = () => {
             <Navbar/>
             <button onClick={handleGoBack}>Go Back</button>
             <h2>Book Details</h2>
-            <img src={bookData.imageLinks.thumbnail} alt={bookData.title}/>
+            <img
+                src={bookData.imageLinks != null ? bookData.imageLinks.smallThumbnail : 'https://via.placeholder.com/128x192.png?text=No%20Cover'}
+                alt={bookData.title}/>
             <p>Title: {bookData.title}</p>
             <p>Authors: {bookData.authors != null ? bookData.authors.join(', ') : 'Unknown'}</p>
             <p>Published Date: {bookData.publishedDate}</p>
