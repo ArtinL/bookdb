@@ -5,6 +5,12 @@ import SearchBar from '../components/SearchBar/SearchBar.component';
 import NavBar from '../components/NavBar/NavBar.component';
 import {Book} from '../Book';
 
+const URL: string = `http://localhost:8080/books?title=`
+
+const API_URL: string = "https://www.googleapis.com/books/v1/volumes";
+const API_KEY: string = "AIzaSyCQAK-HfYpmCljoCDooRvPIPQcL7MNRTFk";
+
+
 const Results: React.FC = () => {
     const [results, setResults] = useState<Book[]>([]);
 
@@ -18,7 +24,9 @@ const Results: React.FC = () => {
         const fetchResults = async () => {
             console.log('Fetching results...' + query);
             try {
-                const response = await fetch(`http://localhost:8080/books?title=${query}`);
+                const testURL: string = API_URL + "?q=" + query + "&key=" + API_KEY;
+                const requestURL: string = URL + query;
+                const response = await fetch(testURL);
                 const data = await response.json();
                 setResults(data.items.map((item: any) => new Book({id: item.id, volumeInfo: item.volumeInfo})));
             } catch (error) {
