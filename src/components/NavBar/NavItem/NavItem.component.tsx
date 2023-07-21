@@ -6,12 +6,10 @@ type NavItemProps = {
     link: string;
 };
 
-const NavItem: React.FC<NavItemProps> = ({name, link}) => {
+export default function NavItem({name, link}: NavItemProps): React.ReactElement {
     return (
         <li>
             <Link to={link}>{name}</Link>
         </li>
     );
 };
-
-export default NavItem;

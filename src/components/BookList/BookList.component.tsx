@@ -6,16 +6,14 @@ type BookListProps = {
     list: Book[];
 }
 
-const BookList: React.FC<BookListProps> = (props: any) => {
-    const list: Book[] = props.list;
+export default function BookList({list}: BookListProps): React.ReactElement {
     return (
         <div>
             <h2>Results:</h2>
-            {list.map((book: Book, index: number) => (
-                <BookListItem key={index} item={book}/>
+            {list.map((item: Book, i: number) => (
+                <BookListItem key={i} book={item}/>
             ))}
         </div>
     );
-};
+}
 
-export default BookList;

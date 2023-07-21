@@ -1,7 +1,7 @@
 import React from 'react';
 import NavItem from './NavItem/NavItem.component';
 
-const Navbar: React.FC = () => {
+export default function Navbar(): React.ReactElement {
     return (
         <nav>
             <ul>
@@ -12,6 +12,5 @@ const Navbar: React.FC = () => {
             </ul>
         </nav>
     );
-};
+}
 
-export default Navbar;

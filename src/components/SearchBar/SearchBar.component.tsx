@@ -1,65 +1,59 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, ChangeEvent, KeyboardEvent} from 'react';
+import {useNavigate} from 'react-router-dom';
+import AdvSearch from './AdvSearch/AdvSearch.component';
 
-type SearchBarProps = {
-    onSearch: (query: string, advancedParams: Record<string, string>) => void;
-};
-
-const SearchBar: React.FC<SearchBarProps> = ({onSearch}) => {
-    const [query, setQuery] = useState('');
-    const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+export default function SearchBar(): React.ReactElement {
+    const [query, setQuery] = useState<string>('');
     const [advancedParams, setAdvancedParams] = useState<Record<string, string>>({});
+
     const searchButtonRef = useRef<HTMLButtonElement>(null);
+    const navigate = useNavigate();
 
-    const handleSearch = () => {
-        onSearch(query, advancedParams);
-    };
+    function handleSearch(): void {
+        let queryString: string = `/results?query=${query}`;
 
-    const handleAdvancedParamChange = (paramKey: string, paramValue: string) => {
-        setAdvancedParams((prevParams) => ({
-            ...prevParams,
-            [paramKey]: paramValue,
-        }));
-    };
+        Object.entries(advancedParams).forEach(([key, value]) => {
+            queryString += `&${key}=${value}`;
+        });
 
-    const handleToggleAdvancedSearch = () => {
-        setShowAdvancedSearch((prevValue) => !prevValue);
-    };
+        navigate(queryString);
+    }
 
-    const handleClearFilters = () => {
-        setAdvancedParams({});
-        onSearch(query, {});
-    };
+    function handleAdvancedParamChange(paramKey: string, paramValue: string, reset: boolean): void {
+        if (reset) setAdvancedParams({})
+        else {
+            setAdvancedParams(prevParams => ({
+                ...prevParams,
+                [paramKey]: paramValue,
+            }));
+        }
+    }
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    function handleKeyDown(e: KeyboardEvent<HTMLInputElement>): void {
         if (e.key === 'Enter') {
             handleSearch();
         }
-    };
+    }
+
+    function handleInputChange(e: ChangeEvent<HTMLInputElement>): void {
+        setQuery(e.target.value);
+    }
 
     return (
         <div>
-            <input placeholder={query} type="text" value={query} onChange={(e) => setQuery(e.target.value)}
-                   onKeyDown={handleKeyDown}/>
-            <button ref={searchButtonRef} onClick={handleSearch}>Search</button>
-            <button onClick={handleToggleAdvancedSearch}>
-                {showAdvancedSearch ? 'Hide Advanced' : 'Show Advanced'}
+            <input
+                placeholder="Search..."
+                type="text"
+                value={query}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+            />
+            <button ref={searchButtonRef} onClick={handleSearch}>
+                Search
             </button>
-            {showAdvancedSearch && (
-                <div>
-                    {/* Render advanced search fields here */}
-                    <p>Category:</p>
-                    <input
-                        type="text"
-                        value={advancedParams.category || ''}
-                        onChange={(e) => handleAdvancedParamChange('category', e.target.value)}
-                    />
-                    {/* Add more advanced search fields as needed */}
-                    <button onClick={handleClearFilters}>Clear Filters</button>
-                </div>
-            )}
+            <AdvSearch advParamChange={handleAdvancedParamChange} prevParams={advancedParams.category}/>
 
         </div>
     );
-};
+}
 
-export default SearchBar;

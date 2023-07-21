@@ -3,13 +3,11 @@ import {Book} from '../../../Book'
 import {Link} from 'react-router-dom'
 
 type ItemProps = {
-    item: Book;
+    key: number;
+    book: Book;
 };
 
-const BookListItem: React.FC<ItemProps> = (props: any) => {
-    const book: Book = props.item;
-    //console.log(book)
-
+export default function BookListItem({book}: ItemProps): React.ReactElement {
     return (
         <div>
             <img
@@ -25,5 +23,3 @@ const BookListItem: React.FC<ItemProps> = (props: any) => {
         </div>
     );
 };
-
-export default BookListItem;

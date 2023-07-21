@@ -3,20 +3,19 @@ import {useLocation, useNavigate} from 'react-router-dom';
 import {Book} from '../Book';
 import Navbar from "../components/NavBar/NavBar.component";
 
-const BookDetails: React.FC = () => {
-    const location = useLocation();
-    const navigate = useNavigate();
+export default function BookDetails(): React.ReactElement {
+    const location: any = useLocation();
+    const navigate: any = useNavigate();
 
     const bookData: Book = location.state?.bookData;
 
     if (!bookData) {
-        // Handle case when book data is not available
         return <div>No book data available</div>;
     }
 
-    const handleGoBack = () => {
-        navigate(-1); // Go back to the previous page in the history
-    };
+    function handleGoBack(): void {
+        navigate(-1);
+    }
 
     return (
         <div>
@@ -38,6 +37,4 @@ const BookDetails: React.FC = () => {
 
         </div>
     );
-};
-
-export default BookDetails;
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import NavBar from '../components/NavBar/NavBar.component';
 
-const Collection: React.FC = () => {
+export default function Collection(): React.ReactElement {
     return (
         <div>
             <NavBar/>
@@ -9,5 +9,3 @@ const Collection: React.FC = () => {
         </div>
     );
 }
-
-export default Collection;
