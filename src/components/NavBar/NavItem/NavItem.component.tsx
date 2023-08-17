@@ -1,15 +1,22 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 type NavItemProps = {
     name: string;
     link: string;
 };
 
+
 export default function NavItem({name, link}: NavItemProps): React.ReactElement {
+    const navigate = useNavigate();
+
+    function handleNav() {
+        navigate(link);
+    }
+
     return (
-        <li>
-            <Link to={link}>{name}</Link>
-        </li>
+
+        <button onClick={handleNav}>{name}</button>
+
     );
 };

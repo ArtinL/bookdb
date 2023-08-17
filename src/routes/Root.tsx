@@ -1,11 +1,14 @@
 import React from 'react';
+import {Outlet} from 'react-router-dom';
 import NavBar from '../components/NavBar/NavBar.component';
 
-export default function Collection(): React.ReactElement {
+export default function Home(): React.ReactElement {
+
     return (
         <div>
             <NavBar/>
-            <h1>Collection</h1>
+            <Outlet/>
         </div>
     );
 }
+

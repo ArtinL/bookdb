@@ -10,7 +10,7 @@ export default function SearchBar(): React.ReactElement {
     const navigate = useNavigate();
 
     function handleSearch(): void {
-        let queryString: string = `/results?query=${query}`;
+        let queryString: string = `/book/list?query=${query}`;
 
         Object.entries(advancedParams).forEach(([key, value]) => {
             queryString += `&${key}=${value}`;
