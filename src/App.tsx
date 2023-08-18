@@ -1,21 +1,41 @@
-import React from 'react';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import Home from './pages/Home.page';
-import Results from './pages/Results.page';
-import Collection from './pages/Collection.page';
-import BookDetails from "./pages/BookDetails.page";
+import React, {ReactElement} from 'react';
+import {Routes, Route} from 'react-router-dom';
+import Root from './routes/Root';
+import Home from './routes/Home.page';
+import List from './routes/List.page';
+import Collection from './routes/Collection.page';
+import BookDetails from "./routes/BookDetails.page";
+import Account from "./routes/Account.page";
+import BookRoot from "./routes/BookRoot.page";
 
-const App: React.FC = () => {
+import SignIn from "./routes/SignIn.page";
+import Register from "./routes/Register.page";
+import './App.css'
+
+
+export default function App(): ReactElement {
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Home/>}/>
-                <Route path="/results" element={<Results/>}/>
-                <Route path="/collection" element={<Collection/>}/>
-                <Route path="/book" element={<BookDetails/>}/>
-            </Routes>
-        </BrowserRouter>
+
+        <Routes>
+            <Route path="/" element={<Root/>}>
+                <Route index element={<Home/>}/>
+                <Route path="/book" element={<BookRoot/>}>
+                    <Route path="/book/list" element={<List searchFlag={true}/>}/>
+                    <Route path="/book/:id" element={<BookDetails/>}/>
+                </Route>
+
+                <Route path="/collection" element={<Collection/>}>
+                    <Route path="/collection/list" element={<List searchFlag={false}/>}/>
+                </Route>
+
+                <Route path="/account" element={<Account/>}>
+                    <Route path="/account/login" element={<SignIn/>}/>
+                    <Route path="/account/signup" element={<Register/>}/>
+                </Route>
+            </Route>
+        </Routes>
+
     );
 };
 
-export default App;
+

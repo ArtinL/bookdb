@@ -1,17 +1,36 @@
-import React from 'react';
+import React, {Dispatch, ReactElement, SetStateAction, useEffect, useState} from 'react';
 import NavItem from './NavItem/NavItem.component';
+import {useAuth} from '../../hooks/useAuth';
+import './NavBar.style.css';
 
-const Navbar: React.FC = () => {
+
+export default function Navbar(): ReactElement {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
+    const [display, setDisplay]: [string, Dispatch<SetStateAction<string>>] = useState("Account");
+
+
+    useEffect((): void => {
+        if (username) {
+            setDisplay(username);
+        } else {
+            setDisplay("Account");
+        }
+    }, [username]);
+
     return (
         <nav>
-            <ul>
-                <NavItem name="Home" link="/"/>
-                <NavItem name="Top" link="/top"/>
-                <NavItem name="Collection" link="/collection"/>
-                <NavItem name="Account" link="/account"/>
-            </ul>
+
+            <NavItem name="Home" link="/"/>
+            <NavItem name="Top" link="/top"/>
+            <NavItem name="Collection" link="/collection"/>
+            <NavItem
+                name={display}
+                link={'/account'}
+            />
+
+
         </nav>
     );
-};
+}
 
-export default Navbar;

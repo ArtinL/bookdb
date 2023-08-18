@@ -1,17 +1,23 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
+import React, {ReactElement} from 'react';
+import {NavigateFunction, useNavigate} from 'react-router-dom';
+import {Button} from "@mui/material";
 
-type NavItemProps = {
+interface NavItemProps {
     name: string;
     link: string;
-};
+}
 
-const NavItem: React.FC<NavItemProps> = ({name, link}) => {
+
+export default function NavItem({name, link}: NavItemProps): ReactElement {
+    const navigate: NavigateFunction = useNavigate();
+
+    function handleNav(): void {
+        navigate(link);
+    }
+
     return (
-        <li>
-            <Link to={link}>{name}</Link>
-        </li>
+
+        <Button variant="text" onClick={handleNav}>{name}</Button>
+
     );
 };
-
-export default NavItem;

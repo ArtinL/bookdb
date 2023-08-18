@@ -1,0 +1,12 @@
+nav {
+    background-color: #c2c2c2;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    /*position: fixed;*/
+    padding: 10px;
+    top: 0;
+    width: auto;
+    z-index: 1;
+    border: #555555;
+}
