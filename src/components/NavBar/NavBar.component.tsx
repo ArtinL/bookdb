@@ -1,22 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import NavItem from './NavItem/NavItem.component';
 import {useAuth} from '../../hooks/useAuth';
+import './NavBar.style.css';
 
 
 export default function Navbar(): React.ReactElement {
-    const [isLoggedIn, username, jwt]: [boolean, string | null, string | null] = useAuth();
+    const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
     const [display, setDisplay] = useState("Account");
     //console.log('check: ', username && isLoggedIn);
     //if (username && isLoggedIn) console.log('true');
     //else console.log('false');
 
     useEffect(() => {
-        if (username && isLoggedIn) {
+        if (username) {
             setDisplay(username);
         } else {
             setDisplay("Account");
         }
-    }, [isLoggedIn, username]);
+    }, [username]);
 
     return (
         <nav>
@@ -28,6 +29,7 @@ export default function Navbar(): React.ReactElement {
                 name={display}
                 link={'/account'}
             />
+
 
         </nav>
     );

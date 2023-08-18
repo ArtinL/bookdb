@@ -1,6 +1,6 @@
 import React from 'react';
 
-type adaptWidgetType = {
+interface adaptWidgetType {
     title: string;
 }
 

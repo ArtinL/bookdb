@@ -3,9 +3,12 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {BookDetail} from '../Model/BookDetail';
 import lang from 'iso-639-1'
 import AdaptWidget from "../components/AdaptWidget/AdaptWidget.component";
+import StarRating from "../components/StarRating/StarRating.component";
 import axios, {AxiosResponse} from "axios";
 import {BookBrief} from "../Model/BookBrief";
 import AddDB from "../components/BookList/BookListItem/AddDB/AddDB.component";
+import './styles/BookDetails.style.css'
+import {Button, Typography} from "@mui/material";
 
 //const URL: string = `${process.env.REACT_APP_BACKEND_URL}/${process.env.REACT_APP_SEARCH_ENDPOINT}/`;
 const URL: string = `http://localhost:8080/search/`;
@@ -70,26 +73,43 @@ export default function BookDetails(): React.ReactElement {
     }
 
     return (
-        <div>
-            <button onClick={handleGoBack}>Go Back</button>
-            <h2>Book Details</h2>
-            <img
-                src={bookData.largeThumbnail || 'https://via.placeholder.com/128x192.png?text=No%20Cover'}
-                alt={bookData.title}/>
-            <p>Title: {bookData.title}</p>
-            <AddDB alreadyAdded={isAdded} book={bookBrief as BookBrief}/>
-            <p>Authors: {bookData.authors || 'Unknown'}</p>
-            <p>Published Date: {bookData.publishedDate || 'Unknown'}</p>
-            <p>Publisher: {bookData.publisher || 'Unknown'}</p>
-            <p>Page Count: {bookData.pageCount || 'No Data'}</p>
-            <p>Language: {lang.getName(bookData.language)}</p>
-            <p>Categories: {bookData.categories || 'Unknown'}</p>
-            <p>Average Rating: {bookData.averageRating || 'No Data'}</p>
-            <p>Ratings Count: {bookData.ratingsCount || 'No Data'}</p>
-            <p>Description: <span dangerouslySetInnerHTML={{__html: bookData.description}}/></p>
-
-
-            <AdaptWidget title={bookData.title || 'Unknown'}/>
+        <div className="book-details-container">
+            <div className="header">
+                <img
+                    className="book-image"
+                    src={
+                        bookData.largeThumbnail ||
+                        'https://via.placeholder.com/128x192.png?text=No%20Cover'
+                    }
+                    alt={bookData.title}
+                />
+                <div className="header-info">
+                    <h2>{bookData.title}</h2>
+                    <p>Authors: {bookData.authors || 'Unknown'}</p>
+                    <p>Published Date: {bookData.publishedDate || 'Unknown'}</p>
+                    <StarRating rating={bookData.averageRating} totalRatings={bookData.ratingsCount}/>
+                </div>
+                <AddDB alreadyAdded={isAdded} book={bookBrief as BookBrief}/>
+            </div>
+            <div className="details">
+                <div className="left-section">
+                    <Typography variant={"h6"}>Publisher:</Typography>
+                    <p>{bookData.publisher || 'Unknown'}</p>
+                    <Typography variant={"h6"}>Publisher:</Typography>
+                    <p>{bookData.pageCount || 'No Data'}</p>
+                    <Typography variant={"h6"}>Publisher:</Typography>
+                    <p>{lang.getName(bookData.language)}</p>
+                    <Typography variant={"h6"}>Publisher:</Typography>
+                    <p>{bookData.categories || 'Unknown'}</p>
+                </div>
+                <div className="right-section">
+                    <Typography variant={"h4"}>Description</Typography>
+                    <div
+                        className="description"
+                        dangerouslySetInnerHTML={{__html: bookData.description}}
+                    />
+                </div>
+            </div>
 
         </div>
     );

@@ -1,6 +1,7 @@
 import React from 'react';
+import {Button} from "@mui/material";
 
-type confirmRemoveProps = {
+interface confirmRemoveProps {
     handleRemove: () => Promise<void>;
     handleCancel: () => void;
 }
@@ -8,9 +9,9 @@ type confirmRemoveProps = {
 export default function ConfirmRemove({handleRemove, handleCancel}: confirmRemoveProps): React.ReactElement {
     return (
         <div>
-            <p>Are you sure you want to remove this book from your collection?</p>
-            <button onClick={handleRemove}>Yes</button>
-            <button onClick={handleCancel}>No</button>
+            <p>Are you sure?</p>
+            <Button size="small" color="secondary" onClick={handleRemove}>Yes</Button>
+            <Button size="small" onClick={handleCancel}>No</Button>
         </div>
     );
 }

@@ -1,10 +1,11 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
+import {Button} from "@mui/material";
 
-type NavItemProps = {
+interface NavItemProps {
     name: string;
     link: string;
-};
+}
 
 
 export default function NavItem({name, link}: NavItemProps): React.ReactElement {
@@ -16,7 +17,7 @@ export default function NavItem({name, link}: NavItemProps): React.ReactElement 
 
     return (
 
-        <button onClick={handleNav}>{name}</button>
+        <Button variant="text" onClick={handleNav}>{name}</Button>
 
     );
 };

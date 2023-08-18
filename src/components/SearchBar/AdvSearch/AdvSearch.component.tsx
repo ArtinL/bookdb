@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-type advSearchProps = {
+interface advSearchProps {
     advParamChange: (paramkey: string, paramvalue: string, reset: boolean) => void;
     prevParams: string;
 }

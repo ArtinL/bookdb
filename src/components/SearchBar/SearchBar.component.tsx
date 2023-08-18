@@ -1,6 +1,7 @@
 import React, {useState, useRef, ChangeEvent, KeyboardEvent} from 'react';
 import {useNavigate} from 'react-router-dom';
 import AdvSearch from './AdvSearch/AdvSearch.component';
+import {Button, TextField} from "@mui/material";
 
 export default function SearchBar(): React.ReactElement {
     const [query, setQuery] = useState<string>('');
@@ -41,17 +42,20 @@ export default function SearchBar(): React.ReactElement {
 
     return (
         <div>
-            <input
+            <TextField
+                style={{width: "50%"}}
+                size="small"
                 placeholder="Search..."
                 type="text"
                 value={query}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
             />
-            <button ref={searchButtonRef} onClick={handleSearch}>
+
+            <Button variant="contained" ref={searchButtonRef} onClick={handleSearch}>
                 Search
-            </button>
-            <AdvSearch advParamChange={handleAdvancedParamChange} prevParams={advancedParams.category}/>
+            </Button>
+            {/*<AdvSearch advParamChange={handleAdvancedParamChange} prevParams={advancedParams.category}/>*/}
 
         </div>
     );

@@ -1,15 +1,17 @@
 import React, {useEffect, useState, Dispatch, SetStateAction} from 'react';
-import {Link} from "react-router-dom";
+import {Link, NavigateFunction} from "react-router-dom";
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
+import {useAuth} from "../hooks/useAuth";
 
 const USERNAME_REGEX: RegExp = /^[a-zA-Z0-9]{4,24}$/;
 const PASS_REGEX: RegExp = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,24}$/;
 
-const URL = "http://localhost:8080/auth/register";
+const URL: string = "http://localhost:8080/auth/register";
+
 
 export default function SignUp(): React.ReactElement {
-    const [username, setUsername]: [string, Dispatch<SetStateAction<string>>] = useState<string>('');
+    const [user, setUser]: [string, Dispatch<SetStateAction<string>>] = useState<string>('');
     const [userValid, setUserValid]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
 
     const [pass, setPass]: [string, Dispatch<SetStateAction<string>>] = useState<string>('');
@@ -21,23 +23,25 @@ export default function SignUp(): React.ReactElement {
     const [error, setError]: [string, Dispatch<SetStateAction<string>>] = useState<string>('');
     const [success, setSuccess]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
 
-    const navigate = useNavigate();
+    const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, jwt: string) => void, () => void] = useAuth();
 
-    useEffect(() => {
-        if (localStorage.getItem("jwtToken") !== null) {
+    const navigate: NavigateFunction = useNavigate();
+
+    useEffect((): void => {
+        if (jwt !== null) {
             navigate('/', {replace: true});
         }
-    }, [navigate]);
+    }, [jwt, navigate]);
 
-    useEffect(() => {
+    useEffect((): void => {
         if (success) {
             window.location.reload();
         }
     }, [success, navigate]);
 
     useEffect((): void => {
-        setUserValid(USERNAME_REGEX.test(username));
-    }, [username]);
+        setUserValid(USERNAME_REGEX.test(user));
+    }, [user]);
 
     useEffect((): void => {
         setPassValid(PASS_REGEX.test(pass));
@@ -46,7 +50,7 @@ export default function SignUp(): React.ReactElement {
 
     useEffect((): void => {
         setError('');
-    }, [username, pass, passConfirm]);
+    }, [user, pass, passConfirm]);
 
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
@@ -56,19 +60,19 @@ export default function SignUp(): React.ReactElement {
             return;
         }
 
-        const user = {
-            username: username,
+        const userObj: { username: string, password: string } = {
+            username: user,
             password: pass
         }
 
         try {
-            await axios.post(URL, user);
-            //console.log(res.data);
+            await axios.post(URL, userObj);
+            setSuccess(true);
         } catch (error) {
             console.log(error);
             setError("Unable to create account.");
         }
-        setSuccess(true);
+
     }
 
     return (
@@ -80,12 +84,12 @@ export default function SignUp(): React.ReactElement {
                 <input type="text"
                        id="username"
                        name="username"
-                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUser(e.target.value)}
                        autoComplete="off"
                        required
-                       value={username}
+                       value={user}
                 />
-                {username && !userValid ?
+                {user && !userValid ?
                     <p>Username must be 4-24 characters long and contain only letters and numbers.</p> : null}
                 <label htmlFor="password">Password</label>
                 <input type="password"

@@ -1,0 +1,49 @@
+.book-list-item {
+    display: flex;
+    background-color: #eeeeee;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.book-cover {
+    width: 128px;
+    height: 192px;
+    margin-right: 16px;
+}
+
+.book-info {
+    flex-grow: 1;
+}
+
+.book-title {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.book-authors {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.book-published-date {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 16px;
+}
+
+.book-actions {
+    display: flex;
+    align-items: center;
+}
+
+.book-details-link {
+    margin-right: 16px;
+}
+
+.add-db {
+    margin-left: auto;
+}

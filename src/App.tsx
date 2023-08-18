@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ReactElement} from 'react';
 import {Routes, Route} from 'react-router-dom';
 import Root from './routes/Root';
 import Home from './routes/Home.page';
@@ -10,11 +10,15 @@ import Account from "./routes/Account.page";
 import SignUp from "./routes/SignUp.page";
 import BookRoot from "./routes/BookRoot.page";
 
+import SignIn from "./routes/SignIn.page";
+import Register from "./routes/Register.page";
+import './App.css'
 
-const App: React.FC = () => {
+
+export default function App(): ReactElement {
     return (
-        <Routes>
 
+        <Routes>
             <Route path="/" element={<Root/>}>
                 <Route index element={<Home/>}/>
                 <Route path="/book" element={<BookRoot/>}>
@@ -27,14 +31,13 @@ const App: React.FC = () => {
                 </Route>
 
                 <Route path="/account" element={<Account/>}>
-                    <Route path="/account/login" element={<Login/>}/>
-                    <Route path="/account/signup" element={<SignUp/>}/>
+                    <Route path="/account/login" element={<SignIn/>}/>
+                    <Route path="/account/signup" element={<Register/>}/>
                 </Route>
             </Route>
-
         </Routes>
 
     );
 };
 
-export default App;
+

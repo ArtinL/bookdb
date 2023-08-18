@@ -4,10 +4,12 @@ import BookList from '../components/BookList/BookList.component';
 import {BookBrief} from "../Model/BookBrief";
 import axios, {AxiosResponse} from "axios";
 import {useAuth} from "../hooks/useAuth";
+import {Typography} from "@mui/material";
 
-type ListProps = {
+interface ListProps {
     searchFlag: boolean;
 }
+
 //const URL: string = `${process.env.REACT_APP_BACKEND_URL}/${process.env.REACT_APP_SEARCH_ENDPOINT}?title=`;
 const URL: string = `http://localhost:8080/search?title=`;
 const favURL = "http://localhost:8080/favorites";
@@ -15,7 +17,7 @@ export default function List({searchFlag}: ListProps): React.ReactElement {
     const [results, setResults]: [Array<BookBrief>, Dispatch<SetStateAction<Array<BookBrief>>>] = useState<BookBrief[]>([]);
     const [success, setSuccess]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
     const [loading, setLoading]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(true);
-    const [isLoggedIn, username, jwt]: [boolean, string | null, string | null] = useAuth();
+    const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
 
     const location: Location = useLocation();
     const queryParams: URLSearchParams = new URLSearchParams(location.search);
@@ -28,7 +30,6 @@ export default function List({searchFlag}: ListProps): React.ReactElement {
             try {
                 setLoading(true);
                 const request: string = URL + query.replace(' ', '+');
-                //console.log(request);
                 const response: Response = await fetch(request);
                 const data: Array<Object> = await response.json();
                 setLoading(false);
@@ -46,9 +47,6 @@ export default function List({searchFlag}: ListProps): React.ReactElement {
         }
 
         async function fetchCollectionResults(): Promise<void> {
-            //const jwt = localStorage.getItem("jwtToken");
-            //const username = localStorage.getItem("username");
-
 
             try {
                 setLoading(true);
@@ -69,8 +67,7 @@ export default function List({searchFlag}: ListProps): React.ReactElement {
         }
 
         if (searchFlag) fetchSearchResults();
-        else fetchCollectionResults();
-        //fetchSearchResults();
+        else if (username && jwt) fetchCollectionResults();
 
     }, [searchFlag, query, username, jwt]);
 
@@ -83,12 +80,14 @@ export default function List({searchFlag}: ListProps): React.ReactElement {
 
     return (
         <div>
-            <h1>Results Page</h1>
-            {searchFlag && <p>Search query: {query}</p>}
+            <Typography variant="h4">{searchFlag ? "Search Results " : "Saved Books"}</Typography>
+            {searchFlag && <p>Query: {query}</p>}
             {
                 loading ? <p>Searching...</p> :
-                    (searchFlag && query === '') || (results.length === 0) ? <p>No items to show.</p> :
-                        success ? <BookList list={filterResults(results)}/> : <p>Failed to fetch results</p>
+                    !success ? <p>Failed to fetch results</p> :
+                        (searchFlag && query === '') || (!searchFlag && results.length === 0) ?
+                            <p>No items to show.</p> :
+                            <BookList list={filterResults(results)}/>
             }
 
         </div>

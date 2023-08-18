@@ -6,31 +6,20 @@ import axios from "axios";
 
 
 export default function Collection(): React.ReactElement {
-    //const {isLoggedIn, username, jwt} = useAuth();
-    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-    const [username, setUsername] = React.useState("");
+    const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
 
     const navigate = useNavigate();
 
-    React.useEffect(() => {
-        if (localStorage.getItem("jwtToken") !== null) {
-            setIsLoggedIn(true);
-            setUsername(localStorage.getItem("username") as string);
-        }
-    }, []);
 
     React.useEffect(() => {
-
-        const loggedIn = localStorage.getItem("jwtToken") !== null;
-        setIsLoggedIn(loggedIn);
-
+        const loggedIn: boolean = !!(localStorage.getItem('jwtToken') && localStorage.getItem('username'));
+       
         if (!loggedIn) {
-            //console.log('not logged in');
             navigate('/account/login', {replace: true})
         } else {
             navigate('/collection/list', {replace: true})
         }
-    }, [isLoggedIn, navigate])
+    }, [navigate])
 
     return (
         <div>
