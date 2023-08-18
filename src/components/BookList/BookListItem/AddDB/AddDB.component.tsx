@@ -1,7 +1,7 @@
 import React, {Dispatch, ReactElement, SetStateAction, useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {NavigateFunction, useNavigate} from "react-router-dom";
 import {BookBrief} from "../../../../Model/BookBrief";
-import axios, {AxiosResponse} from "axios";
+import axios from "axios";
 import ConfirmRemove from "./ConfirmRemove/ConfirmRemove.component";
 import {useAuth} from "../../../../hooks/useAuth";
 import {Button} from "@mui/material";
@@ -20,9 +20,10 @@ export default function AddDB({className, alreadyAdded, book}: AddDBProps): Reac
     const [isLoading, setIsLoading]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
     const [display, setDisplay]: [string, Dispatch<SetStateAction<string>>] = useState<string>("Add to Collection");
     const [showConfirm, setShowConfirm]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
 
-    const navigate = useNavigate();
+    const navigate: NavigateFunction = useNavigate();
 
     useEffect((): void => {
         setIsInDB(alreadyAdded)
@@ -30,31 +31,26 @@ export default function AddDB({className, alreadyAdded, book}: AddDBProps): Reac
     }, [alreadyAdded]);
 
 
-    async function handleClick() {
-        //const jwt: string | null = localStorage.getItem('jwtToken');
-        //const username: string | null = localStorage.getItem('username');
+    async function handleClick(): Promise<void> {
         setDisplay("Loading...");
         setIsLoading(true)
         if (jwt === null || username === null) {
             navigate('/account/login', {replace: true})
         } else if (isInDB) {
-            //await removeFromDB();
             setShowConfirm(true);
         } else {
             await addToDB(jwt as string, username as string);
         }
         setIsLoading(false)
 
-        //window.location.reload();
     }
 
-    const baseURL = "http://localhost:8080/favorites/";
+    const baseURL: string = "http://localhost:8080/favorites/";
 
     async function addToDB(jwt: string, username: string) {
         const apiURL: string = baseURL + username;
 
         try {
-            //console.log(book);
             await axios.post(apiURL, book, {headers: {"Authorization": `Bearer ${jwt}`}});
             setDisplay("Remove from Collection");
             setIsInDB(true);
@@ -64,9 +60,7 @@ export default function AddDB({className, alreadyAdded, book}: AddDBProps): Reac
 
     }
 
-    async function removeFromDB() {
-        //const jwt: string | null = localStorage.getItem('jwtToken');
-        //const username: string | null = localStorage.getItem('username');
+    async function removeFromDB(): Promise<void> {
 
         const id: string = book.id;
         const apiURL: string = baseURL + username as string + "/" + id;
@@ -86,7 +80,7 @@ export default function AddDB({className, alreadyAdded, book}: AddDBProps): Reac
 
     }
 
-    function cancelRemove() {
+    function cancelRemove(): void {
         setShowConfirm(false);
         setDisplay("Remove from Collection");
     }

@@ -1,21 +1,34 @@
-import React, {useState, useRef, ChangeEvent, KeyboardEvent} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, {
+    useState,
+    useRef,
+    ChangeEvent,
+    KeyboardEvent,
+    Dispatch,
+    SetStateAction,
+    RefObject,
+    ReactElement
+} from 'react';
+import {NavigateFunction, useNavigate} from 'react-router-dom';
 import AdvSearch from './AdvSearch/AdvSearch.component';
 import {Button, TextField} from "@mui/material";
 
-export default function SearchBar(): React.ReactElement {
-    const [query, setQuery] = useState<string>('');
-    const [advancedParams, setAdvancedParams] = useState<Record<string, string>>({});
+export default function SearchBar(): ReactElement {
+    const [query, setQuery]: [string, Dispatch<SetStateAction<string>>] = useState<string>('');
+    const [advancedParams, setAdvancedParams]: [Record<string, string>, Dispatch<SetStateAction<Record<string, string>>>] = useState<Record<string, string>>({});
 
-    const searchButtonRef = useRef<HTMLButtonElement>(null);
-    const navigate = useNavigate();
+    const searchButtonRef: RefObject<HTMLButtonElement> = useRef<HTMLButtonElement>(null);
+    const navigate: NavigateFunction = useNavigate();
 
     function handleSearch(): void {
         let queryString: string = `/book/list?query=${query}`;
 
-        Object.entries(advancedParams).forEach(([key, value]) => {
-            queryString += `&${key}=${value}`;
-        });
+        for (const key in advancedParams) {
+            if (Object.prototype.hasOwnProperty.call(advancedParams, key)) {
+                queryString += `+${key}:${advancedParams[key]}`;
+            }
+        }
+
+        console.log(queryString);
 
         navigate(queryString);
     }
@@ -26,7 +39,8 @@ export default function SearchBar(): React.ReactElement {
             setAdvancedParams(prevParams => ({
                 ...prevParams,
                 [paramKey]: paramValue,
-            }));
+            }))
+            console.log(advancedParams)
         }
     }
 
@@ -55,7 +69,7 @@ export default function SearchBar(): React.ReactElement {
             <Button variant="contained" ref={searchButtonRef} onClick={handleSearch}>
                 Search
             </Button>
-            {/*<AdvSearch advParamChange={handleAdvancedParamChange} prevParams={advancedParams.category}/>*/}
+            <AdvSearch advParamChange={handleAdvancedParamChange} prevParams={advancedParams.category}/>
 
         </div>
     );

@@ -8,6 +8,7 @@ import '../App.css';
 import {Container} from "@mui/material";
 
 export default function Home(): React.ReactElement {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
     useEffect(() => {
         if (jwt) {
@@ -21,6 +22,7 @@ export default function Home(): React.ReactElement {
                 }
             }
 
+            // noinspection JSIgnoredPromiseFromCall
             validate();
         }
     }, [jwt, logOut]);

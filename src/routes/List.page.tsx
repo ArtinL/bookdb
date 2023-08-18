@@ -1,3 +1,5 @@
+// noinspection JSIgnoredPromiseFromCall
+
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Location, useLocation} from 'react-router-dom';
 import BookList from '../components/BookList/BookList.component';
@@ -17,6 +19,7 @@ export default function List({searchFlag}: ListProps): React.ReactElement {
     const [results, setResults]: [Array<BookBrief>, Dispatch<SetStateAction<Array<BookBrief>>>] = useState<BookBrief[]>([]);
     const [success, setSuccess]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
     const [loading, setLoading]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(true);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
 
     const location: Location = useLocation();

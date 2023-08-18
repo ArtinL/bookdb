@@ -1,5 +1,5 @@
-import React from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, {ReactElement} from 'react';
+import {NavigateFunction, useNavigate} from 'react-router-dom';
 import {Button} from "@mui/material";
 
 interface NavItemProps {
@@ -8,10 +8,10 @@ interface NavItemProps {
 }
 
 
-export default function NavItem({name, link}: NavItemProps): React.ReactElement {
-    const navigate = useNavigate();
+export default function NavItem({name, link}: NavItemProps): ReactElement {
+    const navigate: NavigateFunction = useNavigate();
 
-    function handleNav() {
+    function handleNav(): void {
         navigate(link);
     }
 

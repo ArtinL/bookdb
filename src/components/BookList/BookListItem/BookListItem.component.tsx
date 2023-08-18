@@ -1,6 +1,5 @@
-import React from 'react';
-import {BookBrief} from '../../../Model/BookBrief'
-import {Link} from 'react-router-dom'
+import React, {ReactElement} from 'react';
+import {BookBrief} from '../../../Model/BookBrief';
 import AddDB from "./AddDB/AddDB.component";
 import './BookListItem.style.css';
 import {Button} from "@mui/material";
@@ -11,8 +10,8 @@ interface ItemProps {
     alreadyAdded: boolean;
 }
 
-export default function BookListItem({book, alreadyAdded}: ItemProps): React.ReactElement {
-    //console.log(book)
+export default function BookListItem({book, alreadyAdded}: ItemProps): ReactElement {
+
     return (
         <div className="book-list-item">
             <img

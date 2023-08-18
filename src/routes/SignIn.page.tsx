@@ -1,10 +1,10 @@
+// noinspection HtmlUnknownTarget
+
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -14,7 +14,8 @@ import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {useAuth} from "../hooks/useAuth";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import {NavigateFunction, useNavigate} from "react-router-dom";
+import {ReactElement} from "react";
 
 function Copyright(props: any) {
     return (
@@ -32,10 +33,11 @@ function Copyright(props: any) {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function SignIn() {
-    const [username, jwt, logIn, logOut] = useAuth();
+export default function SignIn(): ReactElement {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
 
-    const navigate = useNavigate();
+    const navigate: NavigateFunction = useNavigate();
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);

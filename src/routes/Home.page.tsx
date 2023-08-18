@@ -1,6 +1,5 @@
 import React from 'react';
 import SearchBar from '../components/SearchBar/SearchBar.component';
-import {Outlet} from 'react-router-dom';
 
 export default function Home(): React.ReactElement {
     return (

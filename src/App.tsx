@@ -5,9 +5,7 @@ import Home from './routes/Home.page';
 import List from './routes/List.page';
 import Collection from './routes/Collection.page';
 import BookDetails from "./routes/BookDetails.page";
-import Login from "./routes/Login.page";
 import Account from "./routes/Account.page";
-import SignUp from "./routes/SignUp.page";
 import BookRoot from "./routes/BookRoot.page";
 
 import SignIn from "./routes/SignIn.page";

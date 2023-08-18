@@ -23,6 +23,7 @@ export default function SignUp(): React.ReactElement {
     const [error, setError]: [string, Dispatch<SetStateAction<string>>] = useState<string>('');
     const [success, setSuccess]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, jwt: string) => void, () => void] = useAuth();
 
     const navigate: NavigateFunction = useNavigate();

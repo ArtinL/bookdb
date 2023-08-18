@@ -1,18 +1,15 @@
-import React from 'react';
+import React, {Dispatch, ReactElement, SetStateAction} from 'react';
 import {Outlet} from 'react-router-dom';
 import {useAuth} from '../hooks/useAuth';
 import {NavigateFunction, Location, useNavigate, useLocation} from 'react-router-dom';
 import {Button} from "@mui/material";
 
 
-export default function Account(): React.ReactElement {
-    //const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-    //const [username, setUsername] = React.useState("");
-    const [displayName, setDisplayName] = React.useState("Account");
-    const [displaySignOut, setDisplaySignOut] = React.useState(false);
-
+export default function Account(): ReactElement {
+    const [displayName, setDisplayName]: [string, Dispatch<SetStateAction<string>>] = React.useState("Account");
+    const [displaySignOut, setDisplaySignOut]: [boolean, Dispatch<SetStateAction<boolean>>] = React.useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, jwt: string) => void, () => void] = useAuth();
-
 
     const navigate: NavigateFunction = useNavigate();
     const location: Location = useLocation();
@@ -33,9 +30,8 @@ export default function Account(): React.ReactElement {
         }
     }, [username, navigate, location])
 
-    function signOut() {
+    function signOut(): void {
         logOut();
-        //window.location.reload();
     }
 
     return (

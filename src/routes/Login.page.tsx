@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {NavigateFunction, useNavigate} from 'react-router-dom';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {useAuth} from "../hooks/useAuth";
@@ -11,9 +11,10 @@ export default function Login(): React.ReactElement {
     const [error, setError] = React.useState("");
     const [success, setSuccess] = React.useState(false);
 
-    const [username, jwt, logIn, logOut] = useAuth();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
 
-    const navigate = useNavigate();
+    const navigate: NavigateFunction = useNavigate();
 
     useEffect((): void => {
         if (jwt !== null) {
