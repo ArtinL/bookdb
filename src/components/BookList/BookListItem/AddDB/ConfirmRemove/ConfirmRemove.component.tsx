@@ -1,5 +1,6 @@
 import React from 'react';
 import {Button} from "@mui/material";
+import './ConfirmRemove.style.css'
 
 interface confirmRemoveProps {
     handleRemove: () => Promise<void>;
@@ -8,10 +9,12 @@ interface confirmRemoveProps {
 
 export default function ConfirmRemove({handleRemove, handleCancel}: confirmRemoveProps): React.ReactElement {
     return (
-        <div>
+        <div className={"confirm-box"}>
             <p>Are you sure?</p>
-            <Button size="small" color="secondary" onClick={handleRemove}>Yes</Button>
-            <Button size="small" onClick={handleCancel}>No</Button>
+            <div className={"confirm-btn-holder"}>
+                <Button variant={"contained"} size="small" color="secondary" onClick={handleRemove}>Yes</Button>
+                <Button variant={"contained"} size="small" onClick={handleCancel}>No</Button>
+            </div>
         </div>
     );
 }

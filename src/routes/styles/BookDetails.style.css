@@ -33,6 +33,12 @@
     text-align: center;
 }
 
+.header-add {
+    min-width: 20%;
+    display: flex;
+    justify-content: center;
+}
+
 .book-image {
     width: 150px;
     height: 225px;

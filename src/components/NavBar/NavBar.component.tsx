@@ -22,7 +22,6 @@ export default function Navbar(): ReactElement {
         <nav>
 
             <NavItem name="Home" link="/"/>
-            <NavItem name="Top" link="/top"/>
             <NavItem name="Collection" link="/collection"/>
             <NavItem
                 name={display}

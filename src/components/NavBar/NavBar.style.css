@@ -1,12 +1,12 @@
 nav {
-    background-color: #c2c2c2;
+    background-color: #3b3b3b;
     color: #ffffff;
     display: flex;
     justify-content: space-around;
-    /*position: fixed;*/
     padding: 10px;
+    margin-bottom: 30px;
     top: 0;
     width: auto;
     z-index: 1;
-    border: #555555;
+    border-bottom: #7a7a7a solid 5px;
 }

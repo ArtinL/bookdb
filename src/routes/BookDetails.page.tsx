@@ -91,7 +91,10 @@ export default function BookDetails(): ReactElement {
                     <p>Published Date: {bookData.publishedDate || 'Unknown'}</p>
                     <StarRating rating={bookData.averageRating} totalRatings={bookData.ratingsCount}/>
                 </div>
-                <AddDB alreadyAdded={isAdded} book={bookBrief as BookBrief}/>
+                <div className={"header-add"}>
+                    <AddDB alreadyAdded={isAdded} book={bookBrief as BookBrief}/>
+                </div>
+
             </div>
             <div className="details">
                 <div className="left-section">

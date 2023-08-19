@@ -17,7 +17,7 @@ export default function NavItem({name, link}: NavItemProps): ReactElement {
 
     return (
 
-        <Button variant="text" onClick={handleNav}>{name}</Button>
+        <Button variant="text" sx={{color: 'white'}} onClick={handleNav}>{name}</Button>
 
     );
 };
