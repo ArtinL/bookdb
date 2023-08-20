@@ -74,13 +74,6 @@ export default function List({searchFlag}: ListProps): React.ReactElement {
 
     }, [searchFlag, query, username, jwt]);
 
-    function filterResults(results: BookBrief[]): BookBrief[] {
-        // if (category) {
-        //     return results.filter((book: BookDetail) => book.categories?.includes(category));
-        // }
-        return results;
-    }
-
     return (
         <div>
             <Typography variant="h4">{searchFlag ? "Search Results " : "Saved Books"}</Typography>
@@ -90,7 +83,7 @@ export default function List({searchFlag}: ListProps): React.ReactElement {
                     !success ? <p>Failed to fetch results</p> :
                         (searchFlag && query === '') || (!searchFlag && results.length === 0) ?
                             <p>No items to show.</p> :
-                            <BookList list={filterResults(results)}/>
+                            <BookList list={results}/>
             }
 
         </div>

@@ -11,6 +11,7 @@ import React, {
 import {NavigateFunction, useNavigate} from 'react-router-dom';
 import AdvSearch from './AdvSearch/AdvSearch.component';
 import {Button, TextField} from "@mui/material";
+import './SearchBar.style.css';
 
 export default function SearchBar(): ReactElement {
     const [query, setQuery]: [string, Dispatch<SetStateAction<string>>] = useState<string>('');
@@ -55,20 +56,21 @@ export default function SearchBar(): ReactElement {
     }
 
     return (
-        <div>
-            <TextField
-                style={{width: "50%"}}
-                size="small"
-                placeholder="Search..."
-                type="text"
-                value={query}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
-            />
-
-            <Button variant="contained" ref={searchButtonRef} onClick={handleSearch}>
-                Search
-            </Button>
+        <div id="search-container">
+            <div id="bar-container">
+                <TextField
+                    style={{width: "50%"}}
+                    size="small"
+                    placeholder="Search..."
+                    type="text"
+                    value={query}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                />
+                <Button variant="contained" ref={searchButtonRef} onClick={handleSearch}>
+                    Search
+                </Button>
+            </div>
             <AdvSearch advParamChange={handleAdvancedParamChange} prevParams={advancedParams.category}/>
 
         </div>

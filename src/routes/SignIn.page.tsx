@@ -13,9 +13,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {useAuth} from "../hooks/useAuth";
-import axios from "axios";
+import axios, {AxiosError, isAxiosError} from "axios";
 import {NavigateFunction, useNavigate} from "react-router-dom";
-import {ReactElement} from "react";
+import {ChangeEvent, Dispatch, ReactElement, SetStateAction, useEffect, useState} from "react";
+import {Paper} from "@mui/material";
+import emailValidator from "email-validator";
 
 function Copyright(props: any) {
     return (
@@ -33,38 +35,67 @@ function Copyright(props: any) {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
+const errorMsgSx = {
+    backgroundColor: '#ffb9b5',
+    border: '#4f0304',
+    color: 'Black',
+    padding: '30px',
+    textAlign: 'center',
+    margin: '20px',
+}
+
+interface resType {
+    user: {
+        userId: number,
+        username: string,
+    },
+    jwt: string
+}
+
 export default function SignIn(): ReactElement {
+    const [errorMsg, setErrorMsg]: [string, Dispatch<SetStateAction<string>>] = useState("");
+    const [showErrorBox, setShowErrorBox]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
+
+    const [info, setInfo]: [string, Dispatch<SetStateAction<string>>] = useState<string>("");
+    const [pass, setPass]: [string, Dispatch<SetStateAction<string>>] = useState<string>("");
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
 
-    const navigate: NavigateFunction = useNavigate();
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+    useEffect(() => {
+        if (errorMsg !== "") {
+            setShowErrorBox(true);
+        } else setShowErrorBox(false);
+    }, [errorMsg]);
 
-        const userObj: { username: string, password: string } = {
-            username: data.get('username') as string,
-            password: data.get('password') as string
+    const navigate: NavigateFunction = useNavigate();
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+        event.preventDefault();
+
+        let emailToSend: string = '';
+        let usernameToSend: string = '';
+
+        if (emailValidator.validate(info)) {
+            emailToSend = info;
+        } else {
+            usernameToSend = info;
         }
 
-        let res: {
-            user: {
-                userId: number,
-                username: string,
-            },
-            jwt: string
-        };
+        const userObj: { email: string, username: string, password: string } = {
+            email: emailToSend,
+            username: usernameToSend,
+            password: pass
+        }
+
+        let res: resType;
         const URL: string = "http://localhost:8080/auth/login";
         try {
             res = (await axios.post(URL, userObj)).data;
             navigate('/', {replace: true});
             logIn(res.user.username, res.jwt);
+            setErrorMsg("");
         } catch (error) {
-            console.log(error);
+            setErrorMsg("Invalid username or password");
         }
     };
 
@@ -86,16 +117,27 @@ export default function SignIn(): ReactElement {
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
+
+                    {showErrorBox && (
+                        <Paper
+                            elevation={3}
+                            sx={errorMsgSx}
+                        >
+                            {errorMsg}
+                        </Paper>
+                    )}
+
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
                         <TextField
                             margin="normal"
                             required
                             fullWidth
                             id="username"
-                            label="Username"
+                            label="Username or Email"
                             name="username"
                             autoComplete="username"
                             autoFocus
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => setInfo(event.target.value)}
                         />
                         <TextField
                             margin="normal"
@@ -106,6 +148,7 @@ export default function SignIn(): ReactElement {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => setPass(event.target.value)}
                         />
                         <Button
                             type="submit"

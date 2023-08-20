@@ -12,8 +12,8 @@ export default function StarRating({rating, totalRatings}: StarRatingProps): Rea
 
     const stars: any = Array.from({length: MAX_RATING}, (_, index) => (
         <span key={index}>
-      {index < rating ? <Star/> : <StarOutline/>}
-    </span>
+            {index < rating ? <Star/> : <StarOutline/>}
+        </span>
     ));
 
     return (

@@ -5,7 +5,7 @@ import {Typography} from "@mui/material";
 export default function Home(): React.ReactElement {
     return (
         <div>
-            <Typography variant={"h3"}>Artin's Book Viewer v0.1.0</Typography>
+            <Typography variant={"h3"}>Artin's Book Viewer</Typography>
             <SearchBar/>
         </div>
     );

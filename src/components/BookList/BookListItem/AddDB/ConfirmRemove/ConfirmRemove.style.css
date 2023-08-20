@@ -1,11 +1,14 @@
 .confirm-box {
     display: flex;
+    color: black;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
     border: #5788ad thin solid;
+    background-color: #ffffff;
     min-width: 200px;
-    min-height: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     border-radius: 14px;
 }
 
