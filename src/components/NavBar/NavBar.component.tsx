@@ -19,7 +19,7 @@ export default function Navbar(): ReactElement {
     }, [username]);
 
     return (
-        <nav>
+        <nav className="nav-bar">
 
             <NavItem name="Home" link="/"/>
             <NavItem name="Collection" link="/collection"/>

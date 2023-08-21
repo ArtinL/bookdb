@@ -1,19 +1,20 @@
 // noinspection JSIgnoredPromiseFromCall
 
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {Location, useLocation} from 'react-router-dom';
+import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {Location, NavigateFunction, useLocation, useNavigate} from 'react-router-dom';
 import BookList from '../components/BookList/BookList.component';
 import {BookBrief} from "../Model/BookBrief";
 import axios, {AxiosResponse} from "axios";
 import {useAuth} from "../hooks/useAuth";
-import {Typography} from "@mui/material";
+import {Pagination, Typography} from "@mui/material";
+import './styles/List.style.css';
 
 interface ListProps {
     searchFlag: boolean;
 }
 
 //const URL: string = `${process.env.REACT_APP_BACKEND_URL}/${process.env.REACT_APP_SEARCH_ENDPOINT}?title=`;
-const URL: string = `http://localhost:8080/search?title=`;
+const URL: string = `http://localhost:8080/search`;
 const favURL = "http://localhost:8080/favorites";
 export default function List({searchFlag}: ListProps): React.ReactElement {
     const [results, setResults]: [Array<BookBrief>, Dispatch<SetStateAction<Array<BookBrief>>>] = useState<BookBrief[]>([]);
@@ -25,6 +26,9 @@ export default function List({searchFlag}: ListProps): React.ReactElement {
     const location: Location = useLocation();
     const queryParams: URLSearchParams = new URLSearchParams(location.search);
     const query: string = queryParams.get('query') || '';
+    const page: string = queryParams.get('page') || '1';
+
+    const navigate: NavigateFunction = useNavigate();
 
 
     useEffect((): void => {
@@ -32,7 +36,7 @@ export default function List({searchFlag}: ListProps): React.ReactElement {
 
             try {
                 setLoading(true);
-                const request: string = URL + query.replace(' ', '+');
+                const request: string = `${URL}?title=${query.replace(' ', '+')}&page=${page}`;
                 const response: Response = await fetch(request);
                 const data: Array<Object> = await response.json();
                 setLoading(false);
@@ -72,20 +76,34 @@ export default function List({searchFlag}: ListProps): React.ReactElement {
         if (searchFlag) fetchSearchResults();
         else if (username && jwt) fetchCollectionResults();
 
-    }, [searchFlag, query, username, jwt]);
+    }, [searchFlag, query, username, jwt, page]);
+
+    function handlePageNavigation(e: ChangeEvent<any>, page: number): void {
+        navigate(`${location.pathname}?query=${query}&page=${page}`)
+    }
 
     return (
         <div>
-            <Typography variant="h4">{searchFlag ? "Search Results " : "Saved Books"}</Typography>
-            {searchFlag && <p>Query: {query}</p>}
-            {
-                loading ? <p>Searching...</p> :
-                    !success ? <p>Failed to fetch results</p> :
-                        (searchFlag && query === '') || (!searchFlag && results.length === 0) ?
-                            <p>No items to show.</p> :
-                            <BookList list={results}/>
-            }
-
+            <Typography variant="h4">{searchFlag ? `Search Results for "${query}"` : "Saved Books"}</Typography>
+            <div className="list-container">
+                {
+                    loading ? <p>Searching...</p> :
+                        !success ? <p>Failed to fetch results</p> :
+                            (searchFlag && query === '') || (!searchFlag && results.length === 0) ?
+                                <p>No items to show.</p> :
+                                <BookList list={results}/>
+                }
+                {(success && searchFlag) &&
+                    <div className="page-container">
+                        <Pagination
+                            onChange={handlePageNavigation}
+                            count={10}
+                            shape="rounded"
+                            size="large"
+                        />
+                    </div>
+                }
+            </div>
         </div>
     );
 }
