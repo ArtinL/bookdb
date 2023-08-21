@@ -4,7 +4,7 @@ import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from 
 import {Location, NavigateFunction, useLocation, useNavigate} from 'react-router-dom';
 import BookList from '../components/BookList/BookList.component';
 import {BookBrief} from "../Model/BookBrief";
-import axios, {AxiosResponse} from "axios";
+import axios, {AxiosError, AxiosResponse, isAxiosError} from "axios";
 import {useAuth} from "../hooks/useAuth";
 import {Pagination, Typography} from "@mui/material";
 import './styles/List.style.css';
@@ -65,6 +65,13 @@ export default function List({searchFlag}: ListProps): React.ReactElement {
                 setSuccess(true);
 
             } catch (error) {
+
+                if (isAxiosError(error) && (error as AxiosError).response?.status === 401) {
+                    logOut();
+                    navigate('/account/login', {replace: true});
+                }
+
+
                 setLoading(false);
                 setSuccess(false);
                 console.log(error);
@@ -83,8 +90,8 @@ export default function List({searchFlag}: ListProps): React.ReactElement {
     }
 
     return (
-        <div>
-            <Typography variant="h4">{searchFlag ? `Search Results for "${query}"` : "Saved Books"}</Typography>
+        <div id="list-root-container">
+            <Typography variant="h4">{searchFlag ? `Search Results` : "Saved Books"}</Typography>
             <div className="list-container">
                 {
                     loading ? <p>Searching...</p> :

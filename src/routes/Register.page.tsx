@@ -108,12 +108,9 @@ export default function SignUp(): ReactElement {
             await axios.post(URL, userObj);
             navigate('/account/login', {replace: true})
         } catch (error) {
-            if (isAxiosError(error)) {
-                const axiosError: AxiosError = error;
-                if (axiosError.response?.status === 409) {
-                    setErrorMsg("Username already exists");
-                    console.log(errorMsg);
-                }
+            if (isAxiosError(error) && (error as AxiosError).response?.status === 409) {
+                setErrorMsg("Username already exists");
+                console.log(errorMsg);
             } else {
                 setErrorMsg("Cannot register account");
             }

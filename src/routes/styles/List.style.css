@@ -1,3 +1,7 @@
+#list-root-container {
+    margin-top: 20px;
+}
+
 .list-container {
     display: flex;
     flex-direction: column;

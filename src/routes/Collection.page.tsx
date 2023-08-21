@@ -1,7 +1,8 @@
 import React from 'react';
 import {NavigateFunction, Outlet, useNavigate} from "react-router-dom";
 import {useAuth} from '../hooks/useAuth';
-
+import {Typography} from "@mui/material";
+import './styles/Collection.style.css';
 
 export default function Collection(): React.ReactElement {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -21,8 +22,8 @@ export default function Collection(): React.ReactElement {
     }, [navigate])
 
     return (
-        <div>
-            <h1>Collection for {username}</h1>
+        <div id="collection-container">
+            <Typography variant="h3">Collection for {username}</Typography>
             <Outlet/>
         </div>
     );

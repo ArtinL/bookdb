@@ -30,7 +30,7 @@ export default function BookListItem({book, alreadyAdded}: ItemProps): ReactElem
             <div className="book-info">
                 <div className="book-title">
                     <Typography variant="h6">
-                        {book.title} ({new Date(book.publishedDate).toLocaleDateString()})
+                        {book.title} ({new Date(book.publishedDate).getFullYear()})
                     </Typography>
                 </div>
                 <div className="book-authors">

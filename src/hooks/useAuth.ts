@@ -6,20 +6,20 @@ export function useAuth(): [string | null, string | null, (username: string, jwt
     const [username, setUsername]: [string | null, Dispatch<SetStateAction<string | null>>] = useState<string | null>(null);
     const [jwt, setJwt]: [string | null, Dispatch<SetStateAction<string | null>>] = useState<string | null>(null);
 
-    function logIn(username: string, jwt: string): void {
+    function logIn(username: string, jwt: string, reload: boolean = true): void {
         localStorage.setItem('username', username);
         localStorage.setItem('jwtToken', jwt);
         setUsername(username);
         setJwt(jwt);
-        window.location.reload();
+        if (reload) window.location.reload();
     }
 
-    function logOut(): void {
+    function logOut(reload: boolean = true): void {
         localStorage.removeItem('username');
         localStorage.removeItem('jwtToken');
         setUsername(null);
         setJwt(null);
-        window.location.reload();
+        if (reload) window.location.reload();
     }
 
     useEffect((): void => {

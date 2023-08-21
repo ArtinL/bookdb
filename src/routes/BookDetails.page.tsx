@@ -88,7 +88,7 @@ export default function BookDetails(): ReactElement {
                     alt={bookData.title}
                 />
                 <div className="header-info">
-                    <h2>{bookData.title}</h2>
+                    <Typography variant="h3">{bookData.title}</Typography>
                     <p>
                         {
                             bookData.authors != null ?
@@ -96,7 +96,14 @@ export default function BookDetails(): ReactElement {
                                 "Unknown"
                         }
                     </p>
-                    <p>Published Date: {bookData.publishedDate || 'Unknown'}</p>
+                    <p>{
+                        ("Published " + new Date(bookData.publishedDate).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: '2-digit'
+                        }))
+                        || 'Unknown publish date'
+                    }</p>
                     <StarRating rating={bookData.averageRating} totalRatings={bookData.ratingsCount}/>
                 </div>
                 <div className={"header-add"}>

@@ -30,9 +30,9 @@ export default function Home(): React.ReactElement {
         <div className="root-container">
             <NavBar/>
             <div className="content-container">
-                <Container>
-                    <Outlet/>
-                </Container>
+
+                <Outlet/>
+
             </div>
             <Footer/>
         </div>

@@ -1,8 +1,9 @@
 #search-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    margin: 20px;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
 }
 
 #bar-container {
@@ -12,3 +13,19 @@
     justify-content: flex-start;
     width: 100%;
 }
+
+.home-container #search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+}
+
+.home-container #bar-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+

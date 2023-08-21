@@ -6,42 +6,66 @@ import React, {
     Dispatch,
     SetStateAction,
     RefObject,
-    ReactElement
+    ReactElement, useEffect
 } from 'react';
 import {NavigateFunction, useNavigate} from 'react-router-dom';
 import AdvSearch from './AdvSearch/AdvSearch.component';
-import {Button, TextField} from "@mui/material";
+import {Button, TextField, InputAdornment, IconButton} from "@mui/material";
 import './SearchBar.style.css';
+import SearchIcon from '@mui/icons-material/Search';
+import {ExpandLess, ExpandMore} from "@mui/icons-material";
+import ClearIcon from "@mui/icons-material/Clear";
 
-export default function SearchBar(): ReactElement {
+interface SearchBarProps {
+    prevQuery: string;
+}
+
+export default function SearchBar({prevQuery}: SearchBarProps): ReactElement {
     const [query, setQuery]: [string, Dispatch<SetStateAction<string>>] = useState<string>('');
     const [advancedParams, setAdvancedParams]: [Record<string, string>, Dispatch<SetStateAction<Record<string, string>>>] = useState<Record<string, string>>({});
+    const [showAdvancedSearch, setShowAdvancedSearch]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
 
     const searchButtonRef: RefObject<HTMLButtonElement> = useRef<HTMLButtonElement>(null);
     const navigate: NavigateFunction = useNavigate();
 
+    useEffect(() => {
+        searchButtonRef.current?.focus();
+    }, []);
+
+    useEffect(() => {
+        setQuery(prevQuery);
+    }, [prevQuery]);
+
     function handleSearch(): void {
         let queryString: string = `/book/list?query=${query}`;
+        navigate(queryString);
+    }
 
+    function handleAdvancedSearch(): void {
+        let queryString: string = `/book/list?query=`;
         for (const key in advancedParams) {
             if (Object.prototype.hasOwnProperty.call(advancedParams, key)) {
                 queryString += `+${key}:${advancedParams[key]}`;
             }
         }
-
-        console.log(queryString);
-
         navigate(queryString);
+
     }
 
     function handleAdvancedParamChange(paramKey: string, paramValue: string, reset: boolean): void {
-        if (reset) setAdvancedParams({})
-        else {
-            setAdvancedParams(prevParams => ({
-                ...prevParams,
-                [paramKey]: paramValue,
-            }))
-            console.log(advancedParams)
+        if (reset) {
+            setAdvancedParams({});
+        } else {
+            setAdvancedParams((prevParams: Record<string, string>) => {
+                const updatedParams = {...prevParams};
+
+                if (paramValue.trim() === '') {
+                    delete updatedParams[paramKey];
+                } else {
+                    updatedParams[paramKey] = paramValue;
+                }
+                return updatedParams;
+            });
         }
     }
 
@@ -55,6 +79,10 @@ export default function SearchBar(): ReactElement {
         setQuery(e.target.value);
     }
 
+    function clearInput(): void {
+        setQuery('');
+    }
+
     return (
         <div id="search-container">
             <div id="bar-container">
@@ -66,12 +94,39 @@ export default function SearchBar(): ReactElement {
                     value={query}
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
+                    fullWidth
+                    InputProps={
+                        {
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <IconButton edge="start" color="error" onClick={clearInput} disabled={!query}>
+                                        <ClearIcon/>
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }
+                    }
                 />
-                <Button variant="contained" ref={searchButtonRef} onClick={handleSearch}>
+                <Button
+                    startIcon={<SearchIcon/>}
+                    variant="contained"
+                    ref={searchButtonRef}
+                    onClick={handleSearch}
+                    disabled={!query}
+                >
                     Search
                 </Button>
+                <Button startIcon={showAdvancedSearch ? <ExpandLess/> : <ExpandMore/>}
+                        variant={"outlined"}
+                        size={"large"}
+                        onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}>
+                    Advanced
+                </Button>
             </div>
-            <AdvSearch advParamChange={handleAdvancedParamChange} prevParams={advancedParams.category}/>
+
+            <AdvSearch advParamChange={handleAdvancedParamChange}
+                       show={showAdvancedSearch}
+                       search={handleAdvancedSearch}/>
 
         </div>
     );
