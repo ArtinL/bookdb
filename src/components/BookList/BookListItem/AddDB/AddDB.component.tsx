@@ -1,4 +1,12 @@
-import React, {Dispatch, ReactElement, SetStateAction, useEffect, useState} from "react";
+import React, {
+    ChangeEvent,
+    Dispatch,
+    MouseEventHandler,
+    ReactElement,
+    SetStateAction,
+    useEffect,
+    useState
+} from "react";
 import {NavigateFunction, useNavigate} from "react-router-dom";
 import {BookBrief} from "../../../../Model/BookBrief";
 import axios from "axios";
@@ -31,7 +39,8 @@ export default function AddDB({className, alreadyAdded, book}: AddDBProps): Reac
     }, [alreadyAdded]);
 
 
-    async function handleClick(): Promise<void> {
+    async function handleClick(e: any): Promise<void> {
+        e.stopPropagation();
         setDisplay("Loading...");
         setIsLoading(true)
         if (jwt === null || username === null) {

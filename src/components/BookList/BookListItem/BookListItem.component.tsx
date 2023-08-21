@@ -2,7 +2,9 @@ import React, {ReactElement} from 'react';
 import {BookBrief} from '../../../Model/BookBrief';
 import AddDB from "./AddDB/AddDB.component";
 import './BookListItem.style.css';
-import {Button} from "@mui/material";
+import {Button, Typography} from "@mui/material";
+import StarRating from "../../StarRating/StarRating.component";
+import {useNavigate, NavigateFunction} from "react-router-dom";
 
 interface ItemProps {
     key: number;
@@ -12,24 +14,36 @@ interface ItemProps {
 
 export default function BookListItem({book, alreadyAdded}: ItemProps): ReactElement {
 
+    const navigate: NavigateFunction = useNavigate();
+
+    function handleNavDetails() {
+        navigate(`/book/${book.id}`, {replace: true})
+    }
+
     return (
-        <div className="book-list-item">
+        <div className="book-list-item" onClick={handleNavDetails}>
             <img
                 className="book-cover"
                 src={book.smallThumbnail || 'https://via.placeholder.com/128x192.png?text=No%20Cover'}
                 alt={book.title}
             />
             <div className="book-info">
-                <h3 className="book-title">{book.title}</h3>
-                <p className="book-authors">
-                    Authors: {book.authors != null ? book.authors.join(', ') : 'Unknown'}
-                </p>
-                <p className="book-published-date">
-                    Published Date: {new Date(book.publishedDate).toLocaleDateString()}
-                </p>
-                <Button className="book-details-link" href={`/book/${book.id}`}>
-                    Details
-                </Button>
+                <div className="book-title">
+                    <Typography variant="h6">
+                        {book.title} ({new Date(book.publishedDate).toLocaleDateString()})
+                    </Typography>
+                </div>
+                <div className="book-authors">
+                    <Typography variant="body1">
+                        {
+                            book.authors != null ?
+                                `Author${book.authors.length > 1 ? "s" : ""}: ${book.authors.join(', ')}` :
+                                "Unknown"
+                        }
+                    </Typography>
+                </div>
+                {book.averageRating ? <StarRating rating={book.averageRating} totalRatings={book.ratingsCount}/> :
+                    "No ratings available"}
             </div>
             <div className="book-actions">
                 <AddDB className="add-db" alreadyAdded={alreadyAdded} book={book}/>

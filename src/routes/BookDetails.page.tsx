@@ -58,6 +58,8 @@ export default function BookDetails(): ReactElement {
             authors: bookData.authors,
             publishedDate: bookData.publishedDate,
             smallThumbnail: bookData.largeThumbnail,
+            averageRating: bookData.averageRating,
+            ratingsCount: bookData.ratingsCount
         });
         setBookBrief(brief);
 
@@ -87,7 +89,13 @@ export default function BookDetails(): ReactElement {
                 />
                 <div className="header-info">
                     <h2>{bookData.title}</h2>
-                    <p>Authors: {bookData.authors || 'Unknown'}</p>
+                    <p>
+                        {
+                            bookData.authors != null ?
+                                `Author${bookData.authors.length > 1 ? "s" : ""}: ${bookData.authors.join(', ')}` :
+                                "Unknown"
+                        }
+                    </p>
                     <p>Published Date: {bookData.publishedDate || 'Unknown'}</p>
                     <StarRating rating={bookData.averageRating} totalRatings={bookData.ratingsCount}/>
                 </div>

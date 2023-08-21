@@ -4,6 +4,8 @@ interface IBookBrief {
     authors: string[];
     publishedDate: string;
     smallThumbnail: string;
+    averageRating: number;
+    ratingsCount: number;
 }
 
 export class BookBrief {
@@ -12,6 +14,8 @@ export class BookBrief {
     authors: string[] = [];
     publishedDate: string = '';
     smallThumbnail: string = '';
+    averageRating: number = 0;
+    ratingsCount: number = 0;
 
     constructor(data: IBookBrief);
     constructor();
@@ -23,6 +27,8 @@ export class BookBrief {
             this.authors = data.authors;
             this.publishedDate = data.publishedDate;
             this.smallThumbnail = data.smallThumbnail;
+            this.averageRating = data.averageRating;
+            this.ratingsCount = data.ratingsCount;
         }
     }
 }
