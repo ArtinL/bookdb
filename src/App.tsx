@@ -2,11 +2,12 @@ import React, {ReactElement} from 'react';
 import {Routes, Route} from 'react-router-dom';
 import Root from './routes/Root';
 import Home from './routes/Home.page';
-import List from './routes/List.page';
+import Results from './routes/Results.page';
 import Collection from './routes/Collection.page';
-import BookDetails from "./routes/BookDetails.page";
+import Details from "./routes/Details.page";
 import Account from "./routes/Account.page";
 import BookRoot from "./routes/BookRoot.page";
+import MovieRoot from "./routes/MovieRoot.page";
 
 import SignIn from "./routes/SignIn.page";
 import Register from "./routes/Register.page";
@@ -19,14 +20,16 @@ export default function App(): ReactElement {
         <Routes>
             <Route path="/" element={<Root/>}>
                 <Route index element={<Home/>}/>
-                <Route path="/book" element={<BookRoot/>}>
-                    <Route path="/book/list" element={<List searchFlag={true}/>}/>
-                    <Route path="/book/:id" element={<BookDetails/>}/>
+                <Route path="/books" element={<BookRoot/>}>
+                    <Route path="/books/search" element={<Results type="books"/>}/>
+                    <Route path="/books/:id" element={<Details type="books"/>}/>
+                </Route>
+                <Route path="/movies" element={<MovieRoot/>}>
+                    <Route path="/movies/search" element={<Results type="movies"/>}/>
+                    <Route path="/movies/:id" element={<Details type="movies"/>}/>
                 </Route>
 
-                <Route path="/collection" element={<Collection/>}>
-                    <Route path="/collection/list" element={<List searchFlag={false}/>}/>
-                </Route>
+                <Route path="/collection" element={<Collection/>}/>
 
                 <Route path="/account" element={<Account/>}>
                     <Route path="/account/login" element={<SignIn/>}/>

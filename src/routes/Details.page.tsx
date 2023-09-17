@@ -6,16 +6,22 @@ import {BookDetail} from '../Model/BookDetail';
 import lang from 'iso-639-1'
 import StarRating from "../components/StarRating/StarRating.component";
 import axios, {AxiosResponse} from "axios";
-import {BookBrief} from "../Model/BookBrief";
+//import {BookBrief} from "../Model/BookBrief";
 import AddDB from "../components/BookList/BookListItem/AddDB/AddDB.component";
 import './styles/BookDetails.style.css'
 import {Button, Typography} from "@mui/material";
+import {GenericItem} from "../Model/GenericItem";
 
 //const URL: string = `${process.env.REACT_APP_BACKEND_URL}/${process.env.REACT_APP_SEARCH_ENDPOINT}/`;
 const URL: string = `http://localhost:8080/search/`;
-export default function BookDetails(): ReactElement {
+
+interface DetailProps {
+    type: string
+}
+
+export default function Details({type}: DetailProps): ReactElement {
     const [bookData, setBookData]: [BookDetail, Dispatch<SetStateAction<BookDetail>>] = useState<BookDetail>(new BookDetail());
-    const [bookBrief, setBookBrief]: [BookBrief, Dispatch<SetStateAction<BookBrief>>] = useState<BookBrief>(new BookBrief());
+    const [genericItem, setGenericItem]: [GenericItem, Dispatch<SetStateAction<GenericItem>>] = useState<GenericItem>(new GenericItem());
     const [isAdded, setIsAdded]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
     const navigate: any = useNavigate();
     const {id} = useParams();
@@ -52,16 +58,17 @@ export default function BookDetails(): ReactElement {
     useEffect((): void => {
         if (!bookData) return;
 
-        const brief: BookBrief = new BookBrief({
+        const item: GenericItem = new GenericItem({
+            type: "book",
             id: bookData.id,
-            title: bookData.title,
-            authors: bookData.authors,
-            publishedDate: bookData.publishedDate,
-            smallThumbnail: bookData.largeThumbnail,
+            displayName: bookData.title,
+            creators: bookData.authors,
+            date: bookData.publishedDate,
+            thumbnail: bookData.largeThumbnail,
             averageRating: bookData.averageRating,
             ratingsCount: bookData.ratingsCount
         });
-        setBookBrief(brief);
+        setGenericItem(item);
 
     }, [bookData]);
 
@@ -107,7 +114,7 @@ export default function BookDetails(): ReactElement {
                     <StarRating rating={bookData.averageRating} totalRatings={bookData.ratingsCount}/>
                 </div>
                 <div className={"header-add"}>
-                    <AddDB alreadyAdded={isAdded} book={bookBrief as BookBrief}/>
+                    <AddDB alreadyAdded={isAdded} item={genericItem}/>
                 </div>
 
             </div>

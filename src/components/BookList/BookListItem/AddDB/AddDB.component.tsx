@@ -8,7 +8,7 @@ import React, {
     useState
 } from "react";
 import {NavigateFunction, useNavigate} from "react-router-dom";
-import {BookBrief} from "../../../../Model/BookBrief";
+//import {BookBrief} from "../../../../Model/BookBrief";
 import axios from "axios";
 import ConfirmRemove from "./ConfirmRemove/ConfirmRemove.component";
 import {useAuth} from "../../../../hooks/useAuth";
@@ -16,14 +16,15 @@ import {Button} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {HourglassBottom} from "@mui/icons-material";
+import {GenericItem} from "../../../../Model/GenericItem";
 
 interface AddDBProps {
     className?: string;
     alreadyAdded: boolean;
-    book: BookBrief;
+    item: GenericItem;
 }
 
-export default function AddDB({className, alreadyAdded, book}: AddDBProps): ReactElement {
+export default function AddDB({className, alreadyAdded, item}: AddDBProps): ReactElement {
     const [isInDB, setIsInDB]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
     const [isLoading, setIsLoading]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
     const [display, setDisplay]: [string, Dispatch<SetStateAction<string>>] = useState<string>("Add to Collection");
@@ -56,11 +57,11 @@ export default function AddDB({className, alreadyAdded, book}: AddDBProps): Reac
 
     const baseURL: string = "http://localhost:8080/favorites/";
 
-    async function addToDB(jwt: string, username: string) {
+    async function addToDB(jwt: string, username: string): Promise<void> {
         const apiURL: string = baseURL + username;
 
         try {
-            await axios.post(apiURL, book, {headers: {"Authorization": `Bearer ${jwt}`}});
+            await axios.post(apiURL, item, {headers: {"Authorization": `Bearer ${jwt}`}});
             setDisplay("Remove from Collection");
             setIsInDB(true);
         } catch (error) {
@@ -71,7 +72,7 @@ export default function AddDB({className, alreadyAdded, book}: AddDBProps): Reac
 
     async function removeFromDB(): Promise<void> {
 
-        const id: string = book.id;
+        const id: string = item.id;
         const apiURL: string = baseURL + username as string + "/" + id;
 
         try {

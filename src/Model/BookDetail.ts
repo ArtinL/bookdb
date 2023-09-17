@@ -1,3 +1,5 @@
+import {GenericItem} from "./GenericItem";
+
 interface IBookDetail {
     id: string;
     title: string;

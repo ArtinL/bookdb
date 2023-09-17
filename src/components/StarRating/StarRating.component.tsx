@@ -25,7 +25,7 @@ export default function StarRating({rating, totalRatings}: StarRatingProps): Rea
 
     return (
         <div>
-            {stars} ({totalRatings})
+            {stars} ({totalRatings.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")})
         </div>
     );
 }

@@ -15,15 +15,19 @@ import './SearchBar.style.css';
 import SearchIcon from '@mui/icons-material/Search';
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
 import ClearIcon from "@mui/icons-material/Clear";
+import TypeSelector from "./TypeSelector/TypeSelector.component";
 
 interface SearchBarProps {
+    type: string;
     prevQuery: string;
 }
 
-export default function SearchBar({prevQuery}: SearchBarProps): ReactElement {
+export default function SearchBar({type, prevQuery}: SearchBarProps): ReactElement {
     const [query, setQuery]: [string, Dispatch<SetStateAction<string>>] = useState<string>('');
     const [advancedParams, setAdvancedParams]: [Record<string, string>, Dispatch<SetStateAction<Record<string, string>>>] = useState<Record<string, string>>({});
     const [showAdvancedSearch, setShowAdvancedSearch]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
+    const [reqType, setReqType]: [string, Dispatch<SetStateAction<string>>] = useState<string>('');
+    const [showTypeSelector, setShowTypeSelector]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
 
     const searchButtonRef: RefObject<HTMLButtonElement> = useRef<HTMLButtonElement>(null);
     const navigate: NavigateFunction = useNavigate();
@@ -33,16 +37,22 @@ export default function SearchBar({prevQuery}: SearchBarProps): ReactElement {
     }, []);
 
     useEffect(() => {
+        setReqType(type || 'books');
+        setShowTypeSelector(type === '')
+    }, [type]);
+
+    useEffect(() => {
         setQuery(prevQuery);
     }, [prevQuery]);
 
     function handleSearch(): void {
-        let queryString: string = `/book/list?query=${query}`;
+        let queryString: string = `/${reqType}/search?query=${query}`;
+        console.log(queryString);
         navigate(queryString);
     }
 
     function handleAdvancedSearch(): void {
-        let queryString: string = `/book/list?query=`;
+        let queryString: string = `/${reqType}/search?query=`;
         for (const key in advancedParams) {
             if (Object.prototype.hasOwnProperty.call(advancedParams, key)) {
                 queryString += `+${key}:${advancedParams[key]}`;
@@ -85,11 +95,12 @@ export default function SearchBar({prevQuery}: SearchBarProps): ReactElement {
 
     return (
         <div id="search-container">
+
             <div id="bar-container">
                 <TextField
                     style={{width: "50%"}}
                     size="small"
-                    placeholder="Search..."
+                    placeholder={`Search ${reqType}...`}
                     type="text"
                     value={query}
                     onChange={handleInputChange}
@@ -103,26 +114,28 @@ export default function SearchBar({prevQuery}: SearchBarProps): ReactElement {
                                         <ClearIcon/>
                                     </IconButton>
                                 </InputAdornment>
+                            ),
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton edge="end" color="info" onClick={handleSearch}
+                                                disabled={!query}>
+                                        <SearchIcon/>
+                                    </IconButton>
+                                </InputAdornment>
                             )
                         }
                     }
                 />
-                <Button
-                    startIcon={<SearchIcon/>}
-                    variant="contained"
-                    ref={searchButtonRef}
-                    onClick={handleSearch}
-                    disabled={!query}
-                >
-                    Search
-                </Button>
-                <Button startIcon={showAdvancedSearch ? <ExpandLess/> : <ExpandMore/>}
-                        variant={"outlined"}
-                        size={"large"}
-                        onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}>
-                    Advanced
-                </Button>
+                {(!showTypeSelector && type === 'books') &&
+                    <Button startIcon={showAdvancedSearch ? <ExpandLess/> : <ExpandMore/>}
+                            variant={"outlined"}
+                            size={"large"}
+                            onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}>
+                        Advanced
+                    </Button>}
             </div>
+
+            {showTypeSelector && <TypeSelector setType={setReqType}/>}
 
             <AdvSearch advParamChange={handleAdvancedParamChange}
                        show={showAdvancedSearch}

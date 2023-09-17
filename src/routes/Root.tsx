@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {Outlet} from 'react-router-dom';
 import NavBar from '../components/NavBar/NavBar.component';
+import AppBar from '../components/NavBar/AppBar.component'
 import {useAuth} from "../hooks/useAuth";
 import axios from "axios";
 import Footer from "../components/Footer/Footer.component";
@@ -28,7 +29,7 @@ export default function Home(): React.ReactElement {
     }, [jwt, logOut]);
     return (
         <div className="root-container">
-            <NavBar/>
+            <AppBar/>
             <div className="content-container">
 
                 <Outlet/>

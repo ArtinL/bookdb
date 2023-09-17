@@ -1,21 +1,23 @@
 import React, {Dispatch, SetStateAction, useEffect} from 'react';
-import BookListItem from './BookListItem/BookListItem.component';
-import {BookBrief} from '../../Model/BookBrief';
+import ListItem from './BookListItem/ListItem.component';
+//import {BookBrief} from '../../Model/BookBrief';
 import axios, {AxiosResponse} from "axios";
 import {useAuth} from "../../hooks/useAuth";
+import {GenericItem} from "../../Model/GenericItem";
 
 interface BookListProps {
-    list: BookBrief[];
+    list: GenericItem[];
+
 }
 
-export default function BookList({list}: BookListProps): React.ReactElement {
+export default function GenericList({list}: BookListProps): React.ReactElement {
     const [matched, setMatched]: [Array<string>, Dispatch<SetStateAction<Array<string>>>] = React.useState(new Array<string>());
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
 
     useEffect((): void => {
 
-        const ids: string[] = list.map((item: BookBrief) => item.id);
+        const ids: string[] = list.map((item: GenericItem) => item.id);
         if (username === null || jwt === null) return;
         const URL: string = `http://localhost:8080/favorites/match/${username}`;
 
@@ -36,8 +38,8 @@ export default function BookList({list}: BookListProps): React.ReactElement {
 
     return (
         <div>
-            {list.map((item: BookBrief, i: number) => (
-                <BookListItem key={i} book={item} alreadyAdded={matched.includes(item.id)}/>
+            {list.map((item: GenericItem, i: number) => (
+                <ListItem key={i} item={item} alreadyAdded={matched.includes(item.id)}/>
             ))}
         </div>
     );
