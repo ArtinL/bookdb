@@ -91,7 +91,7 @@ export default function SignIn(): ReactElement {
         const URL: string = "http://localhost:8080/auth/login";
         try {
             res = (await axios.post(URL, userObj)).data;
-            navigate('/', {replace: true});
+            navigate('/');
             logIn(res.user.username, res.jwt);
             setErrorMsg("");
         } catch (error) {

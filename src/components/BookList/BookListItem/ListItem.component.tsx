@@ -17,8 +17,10 @@ export default function ListItem({item, alreadyAdded}: ItemProps): ReactElement 
 
     const navigate: NavigateFunction = useNavigate();
 
+
     function handleNavDetails() {
-        navigate(`/books/${item.id}`, {replace: true})
+        console.log(item)
+        navigate(`/${item.type}/${item.id}`)
     }
 
     return (
@@ -26,12 +28,12 @@ export default function ListItem({item, alreadyAdded}: ItemProps): ReactElement 
             <img
                 className="book-cover"
                 src={item.thumbnail || 'https://via.placeholder.com/128x192.png?text=No%20Cover'}
-                alt={item.displayName}
+                alt={item.title}
             />
             <div className="book-info">
                 <div className="book-title">
                     <Typography variant="h6">
-                        {item.displayName} ({item.date != null ?
+                        {item.title} ({item.date != null ?
                         new Date(item.date).getFullYear() :
                         "Unknown Date"})
                     </Typography>
@@ -40,7 +42,7 @@ export default function ListItem({item, alreadyAdded}: ItemProps): ReactElement 
                     <Typography variant="body1">
                         {
                             item.creators != null ?
-                                `${item.type === 'book' ? "Author" : "Director"}${item.creators.length > 1 ? "s" : ""}: ${item.creators.join(', ')}` :
+                                `${item.type === 'books' ? "Author" : "Director"}${item.creators.length > 1 ? "s" : ""}: ${item.creators.join(', ')}` :
                                 "Unknown"
                         }
                     </Typography>

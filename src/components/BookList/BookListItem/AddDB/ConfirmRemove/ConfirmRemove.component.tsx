@@ -3,8 +3,8 @@ import {Button} from "@mui/material";
 import './ConfirmRemove.style.css'
 
 interface confirmRemoveProps {
-    handleRemove: () => Promise<void>;
-    handleCancel: () => void;
+    handleRemove: (e: any) => Promise<void>;
+    handleCancel: (e: any) => void;
 }
 
 export default function ConfirmRemove({handleRemove, handleCancel}: confirmRemoveProps): React.ReactElement {

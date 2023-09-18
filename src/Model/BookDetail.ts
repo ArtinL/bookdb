@@ -1,17 +1,10 @@
-import {GenericItem} from "./GenericItem";
+import {GenericItem, IDisplay} from "./GenericItem";
 
-interface IBookDetail {
-    id: string;
-    title: string;
-    authors: string[];
-    publishedDate: string;
+interface IBookDetail extends IDisplay {
     publisher: string;
     description: string;
     pageCount: number;
     categories: string[];
-    averageRating: number;
-    ratingsCount: number;
-    largeThumbnail: string;
     language: string;
     previewLink: string;
     saleInfo: SaleInfo;
@@ -24,18 +17,12 @@ interface SaleInfo {
     buyLink: string;
 }
 
-export class BookDetail {
-    id: string = '';
-    title: string = '';
-    authors: string[] = [];
-    publishedDate: string = '';
+export class BookDetail extends GenericItem {
+
     publisher: string = '';
     description: string = '';
     pageCount: number = 0;
     categories: string[] = [];
-    averageRating: number = 0;
-    ratingsCount: number = 0;
-    largeThumbnail: string = '';
     language: string = '';
     previewLink: string = '';
     saleInfo: SaleInfo = {
@@ -49,19 +36,16 @@ export class BookDetail {
     constructor();
 
     constructor(data?: IBookDetail) {
+        super(data);
+
         if (!data) return;
 
-        this.id = data.id;
-        this.title = data.title;
-        this.authors = data.authors;
-        this.publishedDate = data.publishedDate;
         this.publisher = data.publisher;
         this.description = data.description;
         this.pageCount = data.pageCount;
         this.categories = data.categories;
         this.averageRating = data.averageRating;
         this.ratingsCount = data.ratingsCount;
-        this.largeThumbnail = data.largeThumbnail;
         this.language = data.language;
         this.previewLink = data.previewLink;
         this.saleInfo = data.saleInfo;

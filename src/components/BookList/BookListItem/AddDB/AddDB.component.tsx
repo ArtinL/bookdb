@@ -45,7 +45,7 @@ export default function AddDB({className, alreadyAdded, item}: AddDBProps): Reac
         setDisplay("Loading...");
         setIsLoading(true)
         if (jwt === null || username === null) {
-            navigate('/account/login', {replace: true})
+            navigate('/account/login')
         } else if (isInDB) {
             setShowConfirm(true);
         } else {
@@ -59,7 +59,7 @@ export default function AddDB({className, alreadyAdded, item}: AddDBProps): Reac
 
     async function addToDB(jwt: string, username: string): Promise<void> {
         const apiURL: string = baseURL + username;
-
+        console.log(item);
         try {
             await axios.post(apiURL, item, {headers: {"Authorization": `Bearer ${jwt}`}});
             setDisplay("Remove from Collection");
@@ -70,7 +70,8 @@ export default function AddDB({className, alreadyAdded, item}: AddDBProps): Reac
 
     }
 
-    async function removeFromDB(): Promise<void> {
+    async function removeFromDB(e: any): Promise<void> {
+        e.stopPropagation();
 
         const id: string = item.id;
         const apiURL: string = baseURL + username as string + "/" + id;
@@ -90,7 +91,8 @@ export default function AddDB({className, alreadyAdded, item}: AddDBProps): Reac
 
     }
 
-    function cancelRemove(): void {
+    function cancelRemove(e: any): void {
+        e.stopPropagation();
         setShowConfirm(false);
         setDisplay("Remove from Collection");
     }

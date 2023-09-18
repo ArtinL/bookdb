@@ -18,6 +18,7 @@ export default function GenericList({list}: BookListProps): React.ReactElement {
     useEffect((): void => {
 
         const ids: string[] = list.map((item: GenericItem) => item.id);
+        console.log(list)
         if (username === null || jwt === null) return;
         const URL: string = `http://localhost:8080/favorites/match/${username}`;
 

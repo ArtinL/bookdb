@@ -14,7 +14,7 @@ interface ResultsProps {
 }
 
 //const URL: string = `${process.env.REACT_APP_BACKEND_URL}/${process.env.REACT_APP_SEARCH_ENDPOINT}?title=`;
-const URL: string = `http://localhost:8080/search`;
+const URL: string = `http://localhost:8080`;
 export default function Results({type}: ResultsProps): React.ReactElement {
     const [results, setResults]: [Array<GenericItem>, Dispatch<SetStateAction<Array<GenericItem>>>] = useState<GenericItem[]>([]);
     const [success, setSuccess]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
@@ -33,12 +33,12 @@ export default function Results({type}: ResultsProps): React.ReactElement {
 
         try {
             setLoading(true);
-            const request: string = `${URL}?title=${query.replace(' ', '+')}&page=${page}&type=${type}`;
+            const request: string = `${URL}/${type}?title=${query.replace(' ', '+')}&page=${page}`;
             console.log(request);
             const response: Response = await fetch(request);
             const data: Array<Object> = await response.json();
             setLoading(false);
-            setResults(data.map((item: any) => new GenericItem(item)));
+            setResults(data.map((item: any) => item as GenericItem));
             setSuccess(true);
         } catch (error) {
             if (error instanceof TypeError && error.message === 'Failed to fetch') {

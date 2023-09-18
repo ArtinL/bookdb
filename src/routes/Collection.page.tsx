@@ -29,7 +29,7 @@ export default function Collection(): React.ReactElement {
             const data: Array<Object> = response.data;
 
             setLoading(false);
-            setResults(data.map((item: any) => new GenericItem(item)));
+            setResults(data.map((item: any) => item as GenericItem));
             setSuccess(true);
 
         } catch (error) {
@@ -46,9 +46,9 @@ export default function Collection(): React.ReactElement {
         const loggedIn: boolean = !!(localStorage.getItem('jwtToken') && localStorage.getItem('username'));
 
         if (!loggedIn) {
-            navigate('/account/login', {replace: true})
+            navigate('/account/login')
         } else {
-            navigate('/collection', {replace: true})
+            navigate('/collection')
         }
     }, [navigate])
 

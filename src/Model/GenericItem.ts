@@ -1,7 +1,7 @@
-interface IDisplay {
+export interface IDisplay {
     type: string;
     id: string;
-    displayName: string;
+    title: string;
     creators: string[];
     date: string;
     averageRating: number;
@@ -12,21 +12,21 @@ interface IDisplay {
 export class GenericItem {
     type: string = '';
     id: string = '';
-    displayName: string = '';
+    title: string = '';
     creators: string[] = [''];
     date: string = '';
     averageRating: number = 0;
     ratingsCount: number = 0;
     thumbnail: string = '';
 
-    constructor(item: IDisplay);
+    constructor(item: IDisplay | undefined);
     constructor();
 
     constructor(item?: IDisplay) {
         if (!item) return;
         this.type = item.type;
         this.id = item.id;
-        this.displayName = item.displayName;
+        this.title = item.title;
         this.creators = item.creators;
         this.date = item.date;
         this.averageRating = item.averageRating;

@@ -13,15 +13,11 @@ import {Button, Typography} from "@mui/material";
 import {GenericItem} from "../Model/GenericItem";
 
 //const URL: string = `${process.env.REACT_APP_BACKEND_URL}/${process.env.REACT_APP_SEARCH_ENDPOINT}/`;
-const URL: string = `http://localhost:8080/search/`;
+const URL: string = `http://localhost:8080/books/`;
 
-interface DetailProps {
-    type: string
-}
-
-export default function Details({type}: DetailProps): ReactElement {
+export default function BookDetails(): ReactElement {
     const [bookData, setBookData]: [BookDetail, Dispatch<SetStateAction<BookDetail>>] = useState<BookDetail>(new BookDetail());
-    const [genericItem, setGenericItem]: [GenericItem, Dispatch<SetStateAction<GenericItem>>] = useState<GenericItem>(new GenericItem());
+    const [briefItem, setBriefItem]: [GenericItem, Dispatch<SetStateAction<GenericItem>>] = useState<GenericItem>(new GenericItem());
     const [isAdded, setIsAdded]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
     const navigate: any = useNavigate();
     const {id} = useParams();
@@ -59,16 +55,16 @@ export default function Details({type}: DetailProps): ReactElement {
         if (!bookData) return;
 
         const item: GenericItem = new GenericItem({
-            type: "book",
+            type: "books",
             id: bookData.id,
-            displayName: bookData.title,
-            creators: bookData.authors,
-            date: bookData.publishedDate,
-            thumbnail: bookData.largeThumbnail,
+            title: bookData.title,
+            creators: bookData.creators,
+            date: bookData.date,
+            thumbnail: bookData.thumbnail,
             averageRating: bookData.averageRating,
             ratingsCount: bookData.ratingsCount
         });
-        setGenericItem(item);
+        setBriefItem(item);
 
     }, [bookData]);
 
@@ -89,7 +85,7 @@ export default function Details({type}: DetailProps): ReactElement {
                 <img
                     className="book-image"
                     src={
-                        bookData.largeThumbnail ||
+                        bookData.thumbnail ||
                         'https://via.placeholder.com/128x192.png?text=No%20Cover'
                     }
                     alt={bookData.title}
@@ -98,13 +94,13 @@ export default function Details({type}: DetailProps): ReactElement {
                     <Typography variant="h3">{bookData.title}</Typography>
                     <p>
                         {
-                            bookData.authors != null ?
-                                `Author${bookData.authors.length > 1 ? "s" : ""}: ${bookData.authors.join(', ')}` :
+                            bookData.creators != null ?
+                                `Author${bookData.creators.length > 1 ? "s" : ""}: ${bookData.creators.join(', ')}` :
                                 "Unknown"
                         }
                     </p>
                     <p>{
-                        ("Published " + new Date(bookData.publishedDate).toLocaleDateString('en-US', {
+                        ("Published " + new Date(bookData.date).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'long',
                             day: '2-digit'
@@ -114,7 +110,7 @@ export default function Details({type}: DetailProps): ReactElement {
                     <StarRating rating={bookData.averageRating} totalRatings={bookData.ratingsCount}/>
                 </div>
                 <div className={"header-add"}>
-                    <AddDB alreadyAdded={isAdded} item={genericItem}/>
+                    <AddDB alreadyAdded={isAdded} item={briefItem}/>
                 </div>
 
             </div>

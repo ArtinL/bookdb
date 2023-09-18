@@ -18,7 +18,7 @@ export default function Account(): ReactElement {
         const loggedIn: boolean = !!(localStorage.getItem('jwtToken') && localStorage.getItem('username'));
 
         if (!loggedIn && location.pathname !== '/account/signup' && location.pathname !== '/account/login') {
-            navigate('/account/login', {replace: true})
+            navigate('/account/login')
         } else {
             setDisplayName(username as string);
             setDisplayName("Account");
