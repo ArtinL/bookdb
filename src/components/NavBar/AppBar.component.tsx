@@ -26,7 +26,7 @@ function ResponsiveAppBar() {
 
     const [name, setName] = React.useState<string | null>(null);
     const [isLogged, setIsLogged] = React.useState<boolean>(false);
-
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
 
     const navigate = useNavigate();

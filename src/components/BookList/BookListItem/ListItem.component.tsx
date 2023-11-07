@@ -3,7 +3,7 @@ import React, {ReactElement} from 'react';
 import {GenericItem} from "../../../Model/GenericItem";
 import AddDB from "./AddDB/AddDB.component";
 import './BookListItem.style.css';
-import {Button, Typography} from "@mui/material";
+import {Typography} from "@mui/material";
 import StarRating from "../../StarRating/StarRating.component";
 import {useNavigate, NavigateFunction} from "react-router-dom";
 

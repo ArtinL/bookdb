@@ -1,5 +1,5 @@
 import React, {ReactElement} from 'react';
-import {FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, SelectChangeEvent} from "@mui/material";
+import {FormControl, FormControlLabel, Radio, RadioGroup, SelectChangeEvent} from "@mui/material";
 
 interface TypeSelectorProps {
     setType: (type: string) => void;

@@ -3,7 +3,7 @@ import {NavigateFunction, useNavigate} from "react-router-dom";
 import {useAuth} from '../hooks/useAuth';
 import {Typography} from "@mui/material";
 import './styles/Collection.style.css';
-import axios, {AxiosError, AxiosResponse, isAxiosError} from "axios";
+import axios, {AxiosResponse} from "axios";
 import GenericList from "../components/BookList/GenericList.component";
 import {GenericItem} from "../Model/GenericItem";
 import TypeSelector from "../components/SearchBar/TypeSelector/TypeSelector.component";

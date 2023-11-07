@@ -22,7 +22,8 @@ import emailValidator from "email-validator";
 
 const USER_REGEX: RegExp = /^[a-zA-Z0-9]{4,16}$/;
 const PASS_REGEX: RegExp = /^^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/;
-const EMAIL_REGEX: RegExp = /^[A-Za-z0-9+_.-]+@(.+)$/;
+
+//const EMAIL_REGEX: RegExp = /^[A-Za-z0-9+_.-]+@(.+)$/;
 
 
 function Copyright(props: any) {

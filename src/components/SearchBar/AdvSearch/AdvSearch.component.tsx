@@ -1,4 +1,4 @@
-import React, {ChangeEvent, Dispatch, ReactElement, SetStateAction, useEffect, useState} from 'react';
+import React, {ChangeEvent, Dispatch, ReactElement, SetStateAction, useState} from 'react';
 import {Button, TextField, Typography} from "@mui/material";
 import './AdvSearch.style.css';
 import SearchIcon from "@mui/icons-material/Search";
