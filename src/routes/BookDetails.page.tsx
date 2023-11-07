@@ -13,7 +13,7 @@ import {Button, Typography} from "@mui/material";
 import {GenericItem} from "../Model/GenericItem";
 
 //const URL: string = `${process.env.REACT_APP_BACKEND_URL}/${process.env.REACT_APP_SEARCH_ENDPOINT}/`;
-const URL: string = `http://localhost:8080/books/`;
+const URL: string = `https://artin-media-backend.azurewebsites.net/books/`;
 
 export default function BookDetails(): ReactElement {
     const [bookData, setBookData]: [BookDetail, Dispatch<SetStateAction<BookDetail>>] = useState<BookDetail>(new BookDetail());
@@ -37,7 +37,7 @@ export default function BookDetails(): ReactElement {
 
         async function matchInDB(): Promise<void> {
             const ids: string[] = [id as string];
-            const matchURL: string = `http://localhost:8080/favorites/match/${localStorage.getItem('username')}`;
+            const matchURL: string = `https://artin-media-backend.azurewebsites.net/favorites/match/${localStorage.getItem('username')}`;
             try {
                 const response: AxiosResponse<any> = await axios.post(matchURL, ids, {headers: {"Authorization": `Bearer ${jwt}`}});
                 const data: Array<string> = response.data;

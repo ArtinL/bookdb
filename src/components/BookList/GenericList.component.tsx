@@ -20,7 +20,7 @@ export default function GenericList({list}: BookListProps): React.ReactElement {
         const ids: string[] = list.map((item: GenericItem) => item.id);
         console.log(list)
         if (username === null || jwt === null) return;
-        const URL: string = `http://localhost:8080/favorites/match/${username}`;
+        const URL: string = `https://artin-media-backend.azurewebsites.net/favorites/match/${username}`;
 
         async function matchInDB(): Promise<void> {
             try {

@@ -88,7 +88,7 @@ export default function SignIn(): ReactElement {
         }
 
         let res: resType;
-        const URL: string = "http://localhost:8080/auth/login";
+        const URL: string = "https://artin-media-backend.azurewebsites.net/auth/login";
         try {
             res = (await axios.post(URL, userObj)).data;
             navigate('/');

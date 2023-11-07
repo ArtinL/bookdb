@@ -103,7 +103,7 @@ export default function SignUp(): ReactElement {
             username: user,
             password: pass
         }
-        const URL: string = "http://localhost:8080/auth/register";
+        const URL: string = "https://artin-media-backend.azurewebsites.net/auth/register";
         try {
             await axios.post(URL, userObj);
             navigate('/account/login')
