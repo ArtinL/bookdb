@@ -6,7 +6,6 @@ import {BookDetail} from '../Model/BookDetail';
 import lang from 'iso-639-1'
 import StarRating from "../components/StarRating/StarRating.component";
 import axios, {AxiosResponse} from "axios";
-//import {BookBrief} from "../Model/BookBrief";
 import AddDB from "../components/BookList/BookListItem/AddDB/AddDB.component";
 import './styles/BookDetails.style.css'
 import {Button, Typography} from "@mui/material";

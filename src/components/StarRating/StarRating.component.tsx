@@ -23,7 +23,7 @@ export default function StarRating({rating, totalRatings}: StarRatingProps): Rea
         </span>
     ));
 
-    return (
+    return totalRatings === 0 ? (<div>No ratings available</div>) : (
         <div>
             {stars} ({totalRatings.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")})
         </div>

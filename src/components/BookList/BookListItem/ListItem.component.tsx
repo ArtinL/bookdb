@@ -6,6 +6,8 @@ import './BookListItem.style.css';
 import {Typography} from "@mui/material";
 import StarRating from "../../StarRating/StarRating.component";
 import {useNavigate, NavigateFunction} from "react-router-dom";
+import MovieIcon from '@mui/icons-material/Movie';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 interface ItemProps {
     key: number;
@@ -37,6 +39,7 @@ export default function ListItem({item, alreadyAdded}: ItemProps): ReactElement 
                         new Date(item.date).getFullYear() :
                         "Unknown Date"})
                     </Typography>
+                    <span className="icon">{item.type === 'books' ? <MenuBookIcon/> : <MovieIcon/>}</span>
                 </div>
                 <div className="book-authors">
                     <Typography variant="body1">
@@ -47,9 +50,7 @@ export default function ListItem({item, alreadyAdded}: ItemProps): ReactElement 
                         }
                     </Typography>
                 </div>
-                {item.averageRating ?
-                    <StarRating rating={item.averageRating} totalRatings={item.ratingsCount}/> :
-                    "No ratings available"}
+                <StarRating rating={item.averageRating} totalRatings={item.ratingsCount}/>
             </div>
             <div className="book-actions">
                 <AddDB className="add-db" alreadyAdded={alreadyAdded} item={item}/>
