@@ -12,19 +12,28 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import axios from "axios";
+import axios, {AxiosError, isAxiosError} from "axios";
 import {NavigateFunction, useNavigate} from "react-router-dom";
 import {ChangeEvent, Dispatch, ReactElement, SetStateAction, useEffect, useState} from "react";
-import {AxiosError, isAxiosError} from "axios";
-import {Paper} from "@mui/material";
 import emailValidator from "email-validator";
 
+// NEW imports for nicer UX
+import {
+    Alert,
+    Card,
+    CardContent,
+    IconButton,
+    InputAdornment,
+    Snackbar
+} from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
+import PersonIcon from '@mui/icons-material/Person';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const USER_REGEX: RegExp = /^[a-zA-Z0-9]{4,16}$/;
-const PASS_REGEX: RegExp = /^^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/;
-
-//const EMAIL_REGEX: RegExp = /^[A-Za-z0-9+_.-]+@(.+)$/;
-
+// NOTE: removed the accidental double ^ at the start
+const PASS_REGEX: RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/;
 
 function Copyright(props: any) {
     return (
@@ -39,83 +48,57 @@ function Copyright(props: any) {
     );
 }
 
-const errorMsgSx = {
-    backgroundColor: '#ffb9b5',
-    border: '#4f0304',
-    color: 'Black',
-    padding: '30px',
-    textAlign: 'center',
-    margin: '20px',
-}
-
-const errorSx = {
-    backgroundColor: '#ffd6d2',
-    border: '1px solid',
-    //borderRadius: '5px',
-    borderColor: '#4f0304',
-    color: 'Black',
-    padding: '5px',
-    textAlign: 'center',
-    margin: '5px',
-    marginBottom: '20px'
-}
-
 const defaultTheme = createTheme();
 
 export default function SignUp(): ReactElement {
-    const [errorMsg, setErrorMsg]: [string, Dispatch<SetStateAction<string>>] = useState("");
-    const [showErrorBox, setShowErrorBox]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = useState<string>("");
+    const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 
-    const [email, setEmail]: [string, Dispatch<SetStateAction<string>>] = useState<string>("");
-    const [user, setUser]: [string, Dispatch<SetStateAction<string>>] = useState<string>("");
-    const [pass, setPass]: [string, Dispatch<SetStateAction<string>>] = useState<string>("");
-    const [confirmPass, setConfirmPass]: [string, Dispatch<SetStateAction<string>>] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [user, setUser] = useState<string>("");
+    const [pass, setPass] = useState<string>("");
+    const [confirmPass, setConfirmPass] = useState<string>("");
 
-    const [emailValid, setEmailValid]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
-    const [userValid, setUserValid]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
-    const [passValid, setPassValid]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
-    const [confirmPassValid, setConfirmPassValid]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
+    const [emailValid, setEmailValid] = useState<boolean>(false);
+    const [userValid, setUserValid] = useState<boolean>(false);
+    const [passValid, setPassValid] = useState<boolean>(false);
+    const [confirmPassValid, setConfirmPassValid] = useState<boolean>(false);
+
+    // password visibility toggles
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
     useEffect((): void => {
-        setEmailValid(emailValidator.validate(email));
+        setEmailValid(email ? emailValidator.validate(email) : false);
     }, [email]);
 
     useEffect((): void => {
-        setUserValid(USER_REGEX.test(user));
+        setUserValid(user ? USER_REGEX.test(user) : false);
     }, [user]);
 
     useEffect((): void => {
-        setPassValid(PASS_REGEX.test(pass));
-        setConfirmPassValid(pass === confirmPass);
+        setPassValid(pass ? PASS_REGEX.test(pass) : false);
+        setConfirmPassValid(confirmPass ? pass === confirmPass : false);
     }, [pass, confirmPass]);
 
     useEffect((): void => {
-        if (errorMsg !== "") {
-            setShowErrorBox(true);
-        } else setShowErrorBox(false);
+        setShowErrorBox(errorMsg !== "");
     }, [errorMsg]);
 
     const navigate: NavigateFunction = useNavigate();
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        //const data = new FormData(event.currentTarget);
-        const userObj: { email: string, username: string, password: string } = {
-            email: email,
-            username: user,
-            password: pass
-        }
-        const URL: string = "https://artin-media-backend.azurewebsites.net/auth/register";
+        const userObj = { email: email, username: user, password: pass };
+        const URL = "http://localhost:8080/auth/register";
         try {
             await axios.post(URL, userObj);
-            navigate('/account/login')
+            navigate('/account/login');
         } catch (error) {
             if (isAxiosError(error) && (error as AxiosError).response?.status === 409) {
-                setErrorMsg("Username already exists");
-                console.log(errorMsg);
+                setErrorMsg("That username is taken. Try another one.");
             } else {
-                setErrorMsg("Cannot register account");
+                setErrorMsg("Couldn’t register the account. Try again in a bit.");
             }
-
         }
     };
 
@@ -125,130 +108,188 @@ export default function SignUp(): ReactElement {
                 <CssBaseline/>
                 <Box
                     sx={{
-                        marginTop: 8,
+                        mt: 8,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <LockOutlinedIcon/>
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
 
-                    {showErrorBox && (
-                        <Paper
-                            elevation={3}
-                            sx={errorMsgSx}
-                        >
-                            {errorMsg}
-                        </Paper>
-                    )}
+                    {/* Card wraps the form for a cleaner look */}
+                    <Card elevation={6} sx={{ width: '100%', mt: 3, borderRadius: 2 }}>
+                        <CardContent sx={{ p: { xs: 2.5, sm: 3 } }}>
+                            <Box component="form" noValidate onSubmit={handleSubmit}>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            id="email"
+                                            label="Email"
+                                            name="email"
+                                            value={email}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                                            error={!!email && !emailValid}
+                                            helperText={!!email && !emailValid ? "Enter a valid email address" : " "}
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <EmailIcon fontSize="small"/>
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                        />
+                                    </Grid>
 
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            id="username"
+                                            label="Username"
+                                            name="username"
+                                            value={user}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => setUser(e.target.value)}
+                                            error={!!user && !userValid}
+                                            helperText={
+                                                !!user && !userValid
+                                                    ? "4–16 chars, letters & numbers only"
+                                                    : " "
+                                            }
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <PersonIcon fontSize="small"/>
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                        />
+                                    </Grid>
 
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                {(email && !emailValid) && (
-                                    <Paper
-                                        elevation={3}
-                                        sx={errorSx}
-                                    >
-                                        Email must be valid
-                                    </Paper>
-                                )}
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="email"
-                                    label="Email"
-                                    name="email"
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                {(user && !userValid) && (
-                                    <Paper
-                                        elevation={3}
-                                        sx={errorSx}
-                                    >
-                                        Username must be 4-16 characters long and contain only letters and numbers
-                                    </Paper>
-                                )}
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="username"
-                                    label="Username"
-                                    name="username"
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setUser(e.target.value)}
-                                />
-                            </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            name="password"
+                                            label="Password"
+                                            type={showPassword ? "text" : "password"}
+                                            id="password"
+                                            autoComplete="new-password"
+                                            value={pass}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => setPass(e.target.value)}
+                                            error={!!pass && !passValid}
+                                            helperText={
+                                                !!pass && !passValid
+                                                    ? "8–24 chars, ≥1 letter, ≥1 number, ≥1 special"
+                                                    : " "
+                                            }
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <LockOutlinedIcon fontSize="small"/>
+                                                    </InputAdornment>
+                                                ),
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            onClick={() => setShowPassword(v => !v)}
+                                                            edge="end"
+                                                            aria-label={showPassword ? "Hide password" : "Show password"}
+                                                        >
+                                                            {showPassword ? <VisibilityOff/> : <Visibility/>}
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                        />
+                                    </Grid>
 
-                            <Grid item xs={12}>
-                                {pass && !passValid && (
-                                    <Paper
-                                        elevation={3}
-                                        sx={errorSx}
-                                    >
-                                        Password must be 8-24 characters long and contain at least one letter, one
-                                        number,
-                                        and one special character
-                                    </Paper>
-                                )}
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="new-password"
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setPass(e.target.value)}
-                                />
-                            </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            name="confirmPassword"
+                                            label="Confirm Password"
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            id="confirmPass"
+                                            value={confirmPass}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirmPass(e.target.value)}
+                                            error={!!confirmPass && !confirmPassValid}
+                                            helperText={
+                                                !!confirmPass && !confirmPassValid ? "Passwords must match" : " "
+                                            }
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <LockOutlinedIcon fontSize="small"/>
+                                                    </InputAdornment>
+                                                ),
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            onClick={() => setShowConfirmPassword(v => !v)}
+                                                            edge="end"
+                                                            aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                                                        >
+                                                            {showConfirmPassword ? <VisibilityOff/> : <Visibility/>}
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                        />
+                                    </Grid>
+                                </Grid>
 
-                            <Grid item xs={12}>
-                                {confirmPass && !confirmPassValid && (
-                                    <Paper
-                                        elevation={3}
-                                        sx={errorSx}
-                                    >
-                                        Passwords do not match
-                                    </Paper>
-                                )}
-                                <TextField
-                                    required
+                                <Button
+                                    type="submit"
                                     fullWidth
-                                    name="confirmPassword"
-                                    label="Confirm Password"
-                                    type="password"
-                                    id="confirmPass"
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirmPass(e.target.value)}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{mt: 3, mb: 2}}
-                            disabled={!(emailValid && userValid && passValid && confirmPassValid)}
-                        >
-                            Sign Up
-                        </Button>
-                        <Grid container justifyContent="flex-end">
-                            <Grid item>
-                                <Link href="/account/login" variant="body2">
-                                    Already have an account? Sign in
-                                </Link>
-                            </Grid>
-                        </Grid>
-                    </Box>
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 1 }}
+                                    disabled={!(emailValid && userValid && passValid && confirmPassValid)}
+                                >
+                                    Sign Up
+                                </Button>
+
+                                <Grid container justifyContent="flex-end">
+                                    <Grid item>
+                                        <Link href="/account/login" variant="body2">
+                                            Already have an account? Sign in
+                                        </Link>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </CardContent>
+                    </Card>
                 </Box>
-                <Copyright sx={{mt: 5}}/>
+
+                <Copyright sx={{ mt: 5 }}/>
+
+                {/* Subtle, non-intrusive error popup */}
+                <Snackbar
+                    open={showErrorBox}
+                    autoHideDuration={6000}
+                    onClose={(_, reason) => {
+                        if (reason === 'clickaway') return;
+                        setShowErrorBox(false);
+                        setErrorMsg("");
+                    }}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                >
+                    <Alert
+                        onClose={() => { setShowErrorBox(false); setErrorMsg(""); }}
+                        severity="error"
+                        variant="filled"
+                        sx={{ width: '100%' }}
+                    >
+                        {errorMsg}
+                    </Alert>
+                </Snackbar>
             </Container>
         </ThemeProvider>
     );

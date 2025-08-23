@@ -11,7 +11,7 @@ export default function Home(): React.ReactElement {
     const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
     useEffect(() => {
         if (jwt) {
-            const validateURL = "https://artin-media-backend.azurewebsites.net/favorites/test";
+            const validateURL = "http://localhost:8080/favorites/test";
 
             async function validate() {
                 try {

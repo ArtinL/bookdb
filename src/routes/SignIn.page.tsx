@@ -15,9 +15,22 @@ import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {useAuth} from "../hooks/useAuth";
 import axios from "axios";
 import {NavigateFunction, useNavigate} from "react-router-dom";
-import {ChangeEvent, Dispatch, ReactElement, SetStateAction, useEffect, useState} from "react";
-import {Paper} from "@mui/material";
+import {ChangeEvent, ReactElement, useEffect, useState} from "react";
 import emailValidator from "email-validator";
+
+// New imports for consistent UX with SignUp
+import {
+    Alert,
+    Card,
+    CardContent,
+    IconButton,
+    InputAdornment,
+    Snackbar,
+    CircularProgress
+} from "@mui/material";
+import PersonIcon from '@mui/icons-material/Person';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 function Copyright(props: any) {
     return (
@@ -32,77 +45,64 @@ function Copyright(props: any) {
     );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-const errorMsgSx = {
-    backgroundColor: '#ffb9b5',
-    border: '#4f0304',
-    color: 'Black',
-    padding: '30px',
-    textAlign: 'center',
-    margin: '20px',
-}
-
 interface resType {
-    user: {
-        userId: number,
-        username: string,
-    },
+    user: { userId: number, username: string },
     jwt: string
 }
 
 export default function SignIn(): ReactElement {
-    const [errorMsg, setErrorMsg]: [string, Dispatch<SetStateAction<string>>] = useState("");
-    const [showErrorBox, setShowErrorBox]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = useState<string>("");
+    const [showErrorBox, setShowErrorBox] = useState<boolean>(false);
 
-    const [info, setInfo]: [string, Dispatch<SetStateAction<string>>] = useState<string>("");
-    const [pass, setPass]: [string, Dispatch<SetStateAction<string>>] = useState<string>("");
+    const [info, setInfo] = useState<string>("");
+    const [pass, setPass] = useState<string>("");
+
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [submitted, setSubmitted] = useState<boolean>(false);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
+    const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, token: string) => void, () => void] = useAuth();
 
     useEffect(() => {
-        if (errorMsg !== "") {
-            setShowErrorBox(true);
-        } else setShowErrorBox(false);
+        setShowErrorBox(errorMsg !== "");
     }, [errorMsg]);
 
     const navigate: NavigateFunction = useNavigate();
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
+        setSubmitted(true);
 
-        let emailToSend: string = '';
-        let usernameToSend: string = '';
+        if (!info.trim() || !pass) return;
 
-        if (emailValidator.validate(info)) {
-            emailToSend = info;
-        } else {
-            usernameToSend = info;
-        }
+        const emailToSend = emailValidator.validate(info) ? info : '';
+        const usernameToSend = emailToSend ? '' : info;
 
-        const userObj: { email: string, username: string, password: string } = {
-            email: emailToSend,
-            username: usernameToSend,
-            password: pass
-        }
+        const userObj = { email: emailToSend, username: usernameToSend, password: pass };
 
-        let res: resType;
-        const URL: string = "https://artin-media-backend.azurewebsites.net/auth/login";
+        const URL: string = "http://localhost:8080/auth/login";
         try {
-            res = (await axios.post(URL, userObj)).data;
-            navigate('/');
+            setLoading(true);
+            const res = (await axios.post<resType>(URL, userObj)).data;
             logIn(res.user.username, res.jwt);
             setErrorMsg("");
-        } catch (error) {
+            navigate('/');
+        } catch (err: any) {
             setErrorMsg("Invalid username or password");
+        } finally {
+            setLoading(false);
         }
     };
+
+    const canSubmit = info.trim().length > 0 && pass.length > 0;
 
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
-                <CssBaseline/>
+                <CssBaseline />
                 <Box
                     sx={{
                         marginTop: 8,
@@ -111,63 +111,121 @@ export default function SignIn(): ReactElement {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                        <LockOutlinedIcon/>
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
 
-                    {showErrorBox && (
-                        <Paper
-                            elevation={3}
-                            sx={errorMsgSx}
-                        >
-                            {errorMsg}
-                        </Paper>
-                    )}
+                    {/* Consistent Card wrapper */}
+                    <Card elevation={6} sx={{ width: '100%', mt: 3, borderRadius: 2 }}>
+                        <CardContent sx={{ p: { xs: 2.5, sm: 3 } }}>
+                            <Box component="form" onSubmit={handleSubmit} noValidate>
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="username"
+                                    label="Username or Email"
+                                    name="username"
+                                    autoComplete="username"
+                                    autoFocus
+                                    value={info}
+                                    onChange={(event: ChangeEvent<HTMLInputElement>) => setInfo(event.target.value)}
+                                    error={submitted && !info.trim()}
+                                    helperText={submitted && !info.trim() ? "This field is required" : " "}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <PersonIcon fontSize="small" />
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                />
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type={showPassword ? "text" : "password"}
+                                    id="password"
+                                    autoComplete="current-password"
+                                    value={pass}
+                                    onChange={(event: ChangeEvent<HTMLInputElement>) => setPass(event.target.value)}
+                                    error={submitted && !pass}
+                                    helperText={submitted && !pass ? "Password is required" : " "}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <LockOutlinedIcon fontSize="small" />
+                                            </InputAdornment>
+                                        ),
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    onClick={() => setShowPassword(v => !v)}
+                                                    edge="end"
+                                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                                >
+                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                />
 
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="username"
-                            label="Username or Email"
-                            name="username"
-                            autoComplete="username"
-                            autoFocus
-                            onChange={(event: ChangeEvent<HTMLInputElement>) => setInfo(event.target.value)}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            onChange={(event: ChangeEvent<HTMLInputElement>) => setPass(event.target.value)}
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{mt: 3, mb: 2}}
-                        >
-                            Sign In
-                        </Button>
-                        <Grid container>
-                            <Grid item>
-                                <Link href="/account/signup" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
-                        </Grid>
-                    </Box>
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 1 }}
+                                    disabled={!canSubmit || loading}
+                                >
+                                    {loading ? (
+                                        <>
+                                            Signing in…&nbsp;<CircularProgress size={18} />
+                                        </>
+                                    ) : (
+                                        "Sign In"
+                                    )}
+                                </Button>
+
+                                <Grid container justifyContent="flex-end">
+                                    <Grid item>
+                                        <Link href="/account/signup" variant="body2">
+                                            {"Don't have an account? Sign Up"}
+                                        </Link>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </CardContent>
+                    </Card>
                 </Box>
-                <Copyright sx={{mt: 8, mb: 4}}/>
+
+                <Copyright sx={{ mt: 5 }} />
+
+                {/* Subtle, non-intrusive error popup */}
+                <Snackbar
+                    open={showErrorBox}
+                    autoHideDuration={6000}
+                    onClose={(_, reason) => {
+                        if (reason === 'clickaway') return;
+                        setShowErrorBox(false);
+                        setErrorMsg("");
+                    }}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                >
+                    <Alert
+                        onClose={() => { setShowErrorBox(false); setErrorMsg(""); }}
+                        severity="error"
+                        variant="filled"
+                        sx={{ width: '100%' }}
+                    >
+                        {errorMsg}
+                    </Alert>
+                </Snackbar>
             </Container>
         </ThemeProvider>
     );
