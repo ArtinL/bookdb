@@ -7,9 +7,9 @@ import lang from 'iso-639-1'
 import StarRating from "../components/StarRating/StarRating.component";
 import axios, {AxiosResponse} from "axios";
 import AddDB from "../components/BookList/BookListItem/AddDB/AddDB.component";
-import './styles/BookDetails.style.css'
 import {Button, Typography} from "@mui/material";
 import {GenericItem} from "../Model/GenericItem";
+import {styled} from '@mui/material/styles';
 
 //const URL: string = `${process.env.REACT_APP_BACKEND_URL}/${process.env.REACT_APP_SEARCH_ENDPOINT}/`;
 const URL: string = `${process.env.REACT_APP_API_URL}/books/`;
@@ -76,11 +76,11 @@ export default function BookDetails(): ReactElement {
   }
 
   return (
-    <div className="book-details-container">
-      <div className="go-back-container">
+    <DetailsRoot>
+      <GoBackContainer>
         <Button variant={"outlined"} onClick={handleGoBack}>Go Back</Button>
-      </div>
-      <div className="header">
+      </GoBackContainer>
+      <Header>
         <img
           className="book-image"
           src={
@@ -89,7 +89,7 @@ export default function BookDetails(): ReactElement {
           }
           alt={bookData.title}
         />
-        <div className="header-info">
+        <HeaderInfo>
           <Typography variant="h3">{bookData.title}</Typography>
           <p>
             {
@@ -107,14 +107,14 @@ export default function BookDetails(): ReactElement {
             || 'Unknown publish date'
           }</p>
           <StarRating rating={bookData.averageRating} totalRatings={bookData.ratingsCount}/>
-        </div>
-        <div className={"header-add"}>
+        </HeaderInfo>
+        <HeaderAdd>
           <AddDB alreadyAdded={isAdded} item={briefItem}/>
-        </div>
+        </HeaderAdd>
 
-      </div>
-      <div className="details">
-        <div className="left-section">
+      </Header>
+      <Details>
+        <Left>
           <Typography variant={"h6"}>Publisher:</Typography>
           <p>{bookData.publisher || 'Unknown'}</p>
           <Typography variant={"h6"}>Page Count:</Typography>
@@ -130,20 +130,82 @@ export default function BookDetails(): ReactElement {
               <a href={bookData.saleInfo.buyLink}>Purchase</a>
             </div>
           )}
-
-        </div>
-        <div className="right-section">
+        </Left>
+        <Right>
           <Typography variant={"h4"}>Description</Typography>
 
           {bookData.description ?
-            <div
-              className="description"
+            <Description
               dangerouslySetInnerHTML={{__html: bookData.description}}
             /> : <p>No description available.</p>
           }
-        </div>
-      </div>
+        </Right>
+      </Details>
 
-    </div>
+    </DetailsRoot>
   );
 }
+
+const DetailsRoot = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  padding: 20,
+  backgroundColor: '#ffffff',
+  width: '100%',
+  borderRadius: 8,
+}));
+
+const GoBackContainer = styled('div')(() => ({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'flex-start',
+  marginBottom: 20,
+}));
+
+const Header = styled('div')(() => ({
+  padding: 10,
+  display: 'flex',
+  color: 'white',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  width: '100%',
+  marginBottom: 20,
+  backgroundColor: '#555555',
+  borderRadius: 8,
+  '& .book-image': { width: 150, height: 225 },
+}));
+
+const HeaderInfo = styled('div')(() => ({
+  flexGrow: 1,
+  textAlign: 'center',
+}));
+
+const HeaderAdd = styled('div')(() => ({
+  minWidth: '20%',
+  display: 'flex',
+  justifyContent: 'center',
+}));
+
+const Details = styled('div')(() => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  width: '100%',
+}));
+
+const Left = styled('div')(() => ({
+  width: '20%',
+  paddingRight: 20,
+}));
+
+const Right = styled('div')(() => ({
+  width: '80%',
+  flexGrow: 1,
+}));
+
+const Description = styled('div')(() => ({
+  padding: 10,
+  border: '1px solid #ccc',
+  borderRadius: 4,
+}));

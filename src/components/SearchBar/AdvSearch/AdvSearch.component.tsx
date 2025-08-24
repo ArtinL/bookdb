@@ -1,6 +1,6 @@
 import React, {ChangeEvent, Dispatch, ReactElement, SetStateAction, useState} from 'react';
 import {Button, TextField, Typography} from "@mui/material";
-import './AdvSearch.style.css';
+import {styled} from '@mui/material/styles';
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 
@@ -32,9 +32,9 @@ export default function AdvSearch({advParamChange, show, search}: advSearchProps
 
   return (
 
-    <div id={"adv-search"} hidden={!show}>
-      <div id={"input-group"} onKeyDown={handleKeyDown}>
-        <div className="input-field">
+    <AdvSearchRoot hidden={!show}>
+      <InputGroup onKeyDown={handleKeyDown}>
+        <InputField>
           <Typography className="input-label">Title: </Typography>
           <TextField
             size="small"
@@ -46,8 +46,8 @@ export default function AdvSearch({advParamChange, show, search}: advSearchProps
             }}
             value={title}
           />
-        </div>
-        <div className="input-field">
+        </InputField>
+        <InputField>
           <Typography className="input-label">Author: </Typography>
           <TextField
             size="small"
@@ -59,8 +59,8 @@ export default function AdvSearch({advParamChange, show, search}: advSearchProps
             }}
             value={author}
           />
-        </div>
-        <div className="input-field">
+        </InputField>
+        <InputField>
           <Typography className="input-label">Subject: </Typography>
           <TextField
             size="small"
@@ -72,8 +72,8 @@ export default function AdvSearch({advParamChange, show, search}: advSearchProps
             }}
             value={subject}
           />
-        </div>
-        <div className="input-field">
+        </InputField>
+        <InputField>
           <Typography className="input-label">Publisher: </Typography>
           <TextField
             size="small"
@@ -85,11 +85,11 @@ export default function AdvSearch({advParamChange, show, search}: advSearchProps
             }}
             value={publisher}
           />
-        </div>
+        </InputField>
 
 
-      </div>
-      <div id="btn-group">
+      </InputGroup>
+      <BtnGroup>
         <Button startIcon={<SearchIcon/>}
                 size="small"
                 variant="outlined"
@@ -104,10 +104,42 @@ export default function AdvSearch({advParamChange, show, search}: advSearchProps
                 onClick={handleClearFilters}>Clear
           Filters
         </Button>
-      </div>
-    </div>
+      </BtnGroup>
+    </AdvSearchRoot>
 
 
   );
 }
+
+const AdvSearchRoot = styled('div')(() => ({
+  border: '1px solid #808080',
+  borderRadius: 5,
+  backgroundColor: '#f6f6f6',
+  padding: 20,
+  marginTop: 20,
+  width: '90%',
+}));
+
+const InputGroup = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginBottom: 10,
+  flexWrap: 'wrap',
+  gap: 8,
+}));
+
+const InputField = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  '& .input-label': { margin: 10 },
+}));
+
+const BtnGroup = styled('div')(() => ({
+  display: 'flex',
+  justifyContent: 'space-around',
+  width: '100%',
+}));
 

@@ -4,7 +4,7 @@ import AppBar from '../components/NavBar/AppBar.component'
 import {useAuth} from "../hooks/useAuth";
 import axios from "axios";
 import Footer from "../components/Footer/Footer.component";
-import '../App.css';
+import {styled} from '@mui/material/styles';
 
 export default function Home(): React.ReactElement {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -26,14 +26,26 @@ export default function Home(): React.ReactElement {
     }
   }, [jwt, logOut]);
   return (
-    <div className="root-container">
+    <RootContainer>
       <AppBar/>
-      <div className="content-container">
-
+      <ContentContainer>
         <Outlet/>
-
-      </div>
+      </ContentContainer>
       <Footer/>
-    </div>
+    </RootContainer>
   );
 }
+
+const RootContainer = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  minHeight: '100vh',
+}));
+
+const ContentContainer = styled('div')(() => ({
+  display: 'flex',
+  flexGrow: 1,
+  justifyContent: 'center',
+  minWidth: '100%',
+}));

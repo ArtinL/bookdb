@@ -2,12 +2,63 @@ import React, {ReactElement} from 'react';
 //import {BookBrief} from '../../../Model/BookBrief';
 import {GenericItem} from "../../../Model/GenericItem";
 import AddDB from "./AddDB/AddDB.component";
-import './BookListItem.style.css';
 import {Typography} from "@mui/material";
 import StarRating from "../../StarRating/StarRating.component";
 import {NavigateFunction, useNavigate} from "react-router-dom";
 import MovieIcon from '@mui/icons-material/Movie';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import {styled} from '@mui/material/styles';
+
+const ItemRoot = styled('div')(() => ({
+  display: 'flex',
+  cursor: 'pointer',
+  backgroundColor: '#eeeeee',
+  alignItems: 'center',
+  marginBottom: 24,
+  padding: 16,
+  border: '1px solid #ccc',
+  borderRadius: 8,
+  transition: 'background-color 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: '#dddddd',
+  },
+}));
+
+const Cover = styled('img')({
+  width: 128,
+  height: 192,
+  marginRight: 16,
+});
+
+const Info = styled('div')({
+  flexGrow: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'flex-start',
+  padding: 10,
+});
+
+const TitleRow = styled('div')({
+  display: 'flex',
+  fontSize: 18,
+  marginBottom: 15,
+});
+
+const IconSpan = styled('span')({
+  marginLeft: 12,
+});
+
+const Authors = styled('div')({
+  fontSize: 14,
+  color: '#555',
+  marginBottom: 15,
+});
+
+const Actions = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+});
 
 interface ItemProps {
   key: number;
@@ -26,22 +77,21 @@ export default function ListItem({item, alreadyAdded}: ItemProps): ReactElement 
   }
 
   return (
-    <div className="book-list-item" onClick={handleNavDetails}>
-      <img
-        className="book-cover"
+    <ItemRoot onClick={handleNavDetails}>
+      <Cover
         src={item.thumbnail || 'https://via.placeholder.com/128x192.png?text=No%20Cover'}
         alt={item.title}
       />
-      <div className="book-info">
-        <div className="book-title">
+      <Info>
+        <TitleRow>
           <Typography variant="h6">
             {item.title} ({item.date != null ?
             new Date(item.date).getFullYear() :
             "Unknown Date"})
           </Typography>
-          <span className="icon">{item.type === 'books' ? <MenuBookIcon/> : <MovieIcon/>}</span>
-        </div>
-        <div className="book-authors">
+          <IconSpan>{item.type === 'books' ? <MenuBookIcon/> : <MovieIcon/>}</IconSpan>
+        </TitleRow>
+        <Authors>
           <Typography variant="body1">
             {
               item.creators != null ?
@@ -49,12 +99,12 @@ export default function ListItem({item, alreadyAdded}: ItemProps): ReactElement 
                 "Unknown"
             }
           </Typography>
-        </div>
+        </Authors>
         <StarRating rating={item.averageRating} totalRatings={item.ratingsCount}/>
-      </div>
-      <div className="book-actions">
-        <AddDB className="add-db" alreadyAdded={alreadyAdded} item={item}/>
-      </div>
-    </div>
+      </Info>
+      <Actions>
+        <AddDB alreadyAdded={alreadyAdded} item={item}/>
+      </Actions>
+    </ItemRoot>
   );
 };

@@ -2,11 +2,11 @@ import React, {Dispatch, SetStateAction, useCallback, useEffect, useState} from 
 import {NavigateFunction, useNavigate} from "react-router-dom";
 import {useAuth} from '../hooks/useAuth';
 import {Typography} from "@mui/material";
-import './styles/Collection.style.css';
 import axios, {AxiosResponse} from "axios";
 import GenericList from "../components/BookList/GenericList.component";
 import {GenericItem} from "../Model/GenericItem";
 import TypeSelector from "../components/SearchBar/TypeSelector/TypeSelector.component";
+import {styled} from '@mui/material/styles';
 
 
 const favURL = `${process.env.REACT_APP_API_URL}/favorites`;
@@ -58,7 +58,7 @@ export default function Collection(): React.ReactElement {
 
 
   return (
-    <div id="collection-container">
+    <CollectionRoot>
       <Typography variant="h3">Collection for {username}</Typography>
       <TypeSelector setType={setType}/>
       {
@@ -68,6 +68,13 @@ export default function Collection(): React.ReactElement {
               <GenericList list={results}/>
       }
 
-    </div>
+    </CollectionRoot>
   );
 }
+
+const CollectionRoot = styled('div')(() => ({
+  width: '80%',
+  margin: '0 auto',
+  paddingTop: 20,
+  paddingBottom: 20,
+}));

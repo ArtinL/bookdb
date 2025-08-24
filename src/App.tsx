@@ -11,7 +11,7 @@ import BookRoot from "./routes/BookRoot.page";
 import MovieRoot from "./routes/MovieRoot.page";
 import SignIn from "./routes/SignIn.page";
 import Register from "./routes/Register.page";
-import './App.css'
+// styles migrated to styled-components in routes
 
 export default function App(): ReactElement {
   return (

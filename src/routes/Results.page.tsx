@@ -6,7 +6,7 @@ import GenericList from '../components/BookList/GenericList.component';
 //import axios, {AxiosError, AxiosResponse, isAxiosError} from "axios";
 import {useAuth} from "../hooks/useAuth";
 import {Pagination, Typography} from "@mui/material";
-import './styles/List.style.css';
+import {styled} from '@mui/material/styles';
 import {GenericItem} from "../Model/GenericItem";
 
 interface ResultsProps {
@@ -60,9 +60,9 @@ export default function Results({type}: ResultsProps): React.ReactElement {
   }
 
   return (
-    <div id="list-root-container">
+    <ListRoot>
       <Typography variant="h4">{`Search Results`}</Typography>
-      <div className="list-container">
+      <ListContainer>
         {
           query === '' ? <Typography variant="h5">Nothing to show</Typography> :
             loading ? <Typography variant="h5">Loading...</Typography> :
@@ -71,16 +71,38 @@ export default function Results({type}: ResultsProps): React.ReactElement {
                   <GenericList list={results}/>
         }
         {(success) &&
-          <div className="page-container">
+          <PageContainer>
             <Pagination
               onChange={handlePageNavigation}
               count={10}
               shape="rounded"
               size="large"
             />
-          </div>
+          </PageContainer>
         }
-      </div>
-    </div>
+      </ListContainer>
+    </ListRoot>
   );
 }
+
+const ListRoot = styled('div')(() => ({
+  marginTop: 20,
+}));
+
+const ListContainer = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  width: '100%',
+  height: '100%',
+  marginTop: 30,
+}));
+
+const PageContainer = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  width: '100%',
+  height: '100%',
+  margin: 40,
+}));

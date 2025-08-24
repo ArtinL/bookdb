@@ -12,11 +12,27 @@ import React, {
 import {NavigateFunction, useNavigate} from 'react-router-dom';
 import AdvSearch from './AdvSearch/AdvSearch.component';
 import {Button, IconButton, InputAdornment, TextField} from "@mui/material";
-import './SearchBar.style.css';
 import SearchIcon from '@mui/icons-material/Search';
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
 import ClearIcon from "@mui/icons-material/Clear";
 import TypeSelector from "./TypeSelector/TypeSelector.component";
+import {styled} from '@mui/material/styles';
+
+const SearchContainer = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  marginTop: 20,
+  width: '100%',
+}));
+
+const BarContainer = styled('div')<{ center?: boolean }>(({ center }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: center ? 'center' : 'flex-start',
+  width: '100%',
+}));
 
 interface SearchBarProps {
   type: string;
@@ -95,9 +111,9 @@ export default function SearchBar({type, prevQuery}: SearchBarProps): ReactEleme
   }
 
   return (
-    <div id="search-container">
+    <SearchContainer>
 
-      <div id="bar-container">
+  <BarContainer center={type === ''}>
         <TextField
           style={{width: "50%"}}
           size="small"
@@ -134,7 +150,7 @@ export default function SearchBar({type, prevQuery}: SearchBarProps): ReactEleme
                   onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}>
             Advanced
           </Button>}
-      </div>
+      </BarContainer>
 
       {showTypeSelector && <TypeSelector setType={setReqType}/>}
 
@@ -142,7 +158,7 @@ export default function SearchBar({type, prevQuery}: SearchBarProps): ReactEleme
                  show={showAdvancedSearch}
                  search={handleAdvancedSearch}/>
 
-    </div>
+    </SearchContainer>
   );
 }
 
