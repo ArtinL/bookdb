@@ -14,7 +14,7 @@ interface ResultsProps {
 }
 
 //const URL: string = `${process.env.REACT_APP_BACKEND_URL}/${process.env.REACT_APP_SEARCH_ENDPOINT}?title=`;
-const URL: string = `http://localhost:8080`;
+const URL: string = process.env.REACT_APP_API_URL as string;
 export default function Results({type}: ResultsProps): React.ReactElement {
     const [results, setResults]: [Array<GenericItem>, Dispatch<SetStateAction<Array<GenericItem>>>] = useState<GenericItem[]>([]);
     const [success, setSuccess]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
@@ -84,4 +84,3 @@ export default function Results({type}: ResultsProps): React.ReactElement {
         </div>
     );
 }
-

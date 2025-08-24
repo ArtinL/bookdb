@@ -11,7 +11,7 @@ import {GenericItem} from "../Model/GenericItem";
 import {MovieDetail} from "../Model/MovieDetail";
 
 //const URL: string = `${process.env.REACT_APP_BACKEND_URL}/${process.env.REACT_APP_SEARCH_ENDPOINT}/`;
-const URL: string = `http://localhost:8080/movies/`;
+const URL: string = `${process.env.REACT_APP_API_URL}/movies/`;
 
 export default function MovieDetails(): ReactElement {
     const [movieData, setMovieData]: [MovieDetail, Dispatch<SetStateAction<MovieDetail>>] = useState<MovieDetail>(new MovieDetail());
@@ -35,7 +35,7 @@ export default function MovieDetails(): ReactElement {
 
         async function matchInDB(): Promise<void> {
             const ids: string[] = [id as string];
-            const matchURL: string = `http://localhost:8080/favorites/match/${localStorage.getItem('username')}`;
+            const matchURL: string = `${process.env.REACT_APP_API_URL}/favorites/match/${localStorage.getItem('username')}`;
             try {
                 const response: AxiosResponse<any> = await axios.post(matchURL, ids, {headers: {"Authorization": `Bearer ${jwt}`}});
                 const data: Array<string> = response.data;

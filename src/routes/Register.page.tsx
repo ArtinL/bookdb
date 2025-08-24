@@ -89,7 +89,7 @@ export default function SignUp(): ReactElement {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const userObj = { email: email, username: user, password: pass };
-        const URL = "http://localhost:8080/auth/register";
+        const URL = `${process.env.REACT_APP_API_URL}/auth/register`;
         try {
             await axios.post(URL, userObj);
             navigate('/account/login');

@@ -11,7 +11,7 @@ export default function Home(): React.ReactElement {
     const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
     useEffect(() => {
         if (jwt) {
-            const validateURL = "http://localhost:8080/favorites/test";
+            const validateURL = `${process.env.REACT_APP_API_URL}/favorites/test`;
 
             async function validate() {
                 try {
@@ -37,4 +37,3 @@ export default function Home(): React.ReactElement {
         </div>
     );
 }
-

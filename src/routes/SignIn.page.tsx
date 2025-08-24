@@ -83,7 +83,7 @@ export default function SignIn(): ReactElement {
 
         const userObj = { email: emailToSend, username: usernameToSend, password: pass };
 
-        const URL: string = "http://localhost:8080/auth/login";
+        const URL: string = `${process.env.REACT_APP_API_URL}/auth/login`;
         try {
             setLoading(true);
             const res = (await axios.post<resType>(URL, userObj)).data;

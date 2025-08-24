@@ -9,7 +9,7 @@ import {GenericItem} from "../Model/GenericItem";
 import TypeSelector from "../components/SearchBar/TypeSelector/TypeSelector.component";
 
 
-const favURL = "http://localhost:8080/favorites";
+const favURL = `${process.env.REACT_APP_API_URL}/favorites`;
 
 export default function Collection(): React.ReactElement {
     const [type, setType]: [string, Dispatch<SetStateAction<string>>] = useState<string>('books');

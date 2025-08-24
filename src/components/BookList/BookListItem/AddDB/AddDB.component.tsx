@@ -53,7 +53,7 @@ export default function AddDB({className, alreadyAdded, item}: AddDBProps): Reac
 
     }
 
-    const baseURL: string = "http://localhost:8080/favorites/";
+    const baseURL: string = `${process.env.REACT_APP_API_URL}/favorites/`;
 
     async function addToDB(jwt: string, username: string): Promise<void> {
         const apiURL: string = baseURL + username;
