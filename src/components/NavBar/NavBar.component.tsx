@@ -5,31 +5,31 @@ import './NavBar.style.css';
 
 
 export default function Navbar(): ReactElement {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
-    const [display, setDisplay]: [string, Dispatch<SetStateAction<string>>] = useState("Account");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
+  const [display, setDisplay]: [string, Dispatch<SetStateAction<string>>] = useState("Account");
 
 
-    useEffect((): void => {
-        if (username) {
-            setDisplay(username);
-        } else {
-            setDisplay("Account");
-        }
-    }, [username]);
+  useEffect((): void => {
+    if (username) {
+      setDisplay(username);
+    } else {
+      setDisplay("Account");
+    }
+  }, [username]);
 
-    return (
-        <nav className="nav-bar">
+  return (
+    <nav className="nav-bar">
 
-            <NavItem name="Home" link="/"/>
-            <NavItem name="Collection" link="/collection"/>
-            <NavItem
-                name={display}
-                link={'/account'}
-            />
+      <NavItem name="Home" link="/"/>
+      <NavItem name="Collection" link="/collection"/>
+      <NavItem
+        name={display}
+        link={'/account'}
+      />
 
 
-        </nav>
-    );
+    </nav>
+  );
 }
 

@@ -4,30 +4,30 @@ import StarOutline from '@mui/icons-material/StarOutline';
 import {StarHalf} from "@mui/icons-material";
 
 interface StarRatingProps {
-    rating: number;
-    totalRatings: number;
+  rating: number;
+  totalRatings: number;
 }
 
 export default function StarRating({rating, totalRatings}: StarRatingProps): ReactElement {
-    const MAX_RATING: number = 5;
+  const MAX_RATING: number = 5;
 
-    const stars: any = Array.from({length: MAX_RATING}, (_, index) => (
-        <span key={index}>
+  const stars: any = Array.from({length: MAX_RATING}, (_, index) => (
+    <span key={index}>
             {index < rating - 0.5 ? (
-                <Star/>
+              <Star/>
             ) : index === rating - 0.5 ? (
-                <StarHalf/>
+              <StarHalf/>
             ) : (
-                <StarOutline/>
+              <StarOutline/>
             )}
         </span>
-    ));
+  ));
 
-    return totalRatings === 0 ? (<div>No ratings available</div>) : (
-        <div>
-            {stars} ({totalRatings.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")})
-        </div>
-    );
+  return totalRatings === 0 ? (<div>No ratings available</div>) : (
+    <div>
+      {stars} ({totalRatings.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")})
+    </div>
+  );
 }
 
 

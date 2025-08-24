@@ -1,16 +1,16 @@
 import React, {ReactElement} from 'react';
 
 interface adaptWidgetType {
-    title: string;
+  title: string;
 }
 
 export default function AdaptWidget({title}: adaptWidgetType): ReactElement {
 
-    // TODO
+  // TODO
 
-    return (
-        <div>
-            <h1>{title}</h1>
-        </div>
-    );
+  return (
+    <div>
+      <h1>{title}</h1>
+    </div>
+  );
 }

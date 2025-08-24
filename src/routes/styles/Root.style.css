@@ -1,0 +1,10 @@
+.disclaimer {
+    position: fixed;
+    bottom: 18vh;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 0.7rem;
+    z-index: 100;
+    pointer-events: none;
+}

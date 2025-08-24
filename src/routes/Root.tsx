@@ -7,33 +7,33 @@ import Footer from "../components/Footer/Footer.component";
 import '../App.css';
 
 export default function Home(): React.ReactElement {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
-    useEffect(() => {
-        if (jwt) {
-            const validateURL = `${process.env.REACT_APP_API_URL}/favorites/test`;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
+  useEffect(() => {
+    if (jwt) {
+      const validateURL = `${process.env.REACT_APP_API_URL}/favorites/test`;
 
-            async function validate() {
-                try {
-                    await axios.get(validateURL, {headers: {"Authorization": `Bearer ${jwt}`}});
-                } catch (error) {
-                    logOut();
-                }
-            }
-
-            // noinspection JSIgnoredPromiseFromCall
-            validate();
+      async function validate() {
+        try {
+          await axios.get(validateURL, {headers: {"Authorization": `Bearer ${jwt}`}});
+        } catch (error) {
+          logOut();
         }
-    }, [jwt, logOut]);
-    return (
-        <div className="root-container">
-            <AppBar/>
-            <div className="content-container">
+      }
 
-                <Outlet/>
+      // noinspection JSIgnoredPromiseFromCall
+      validate();
+    }
+  }, [jwt, logOut]);
+  return (
+    <div className="root-container">
+      <AppBar/>
+      <div className="content-container">
 
-            </div>
-            <Footer/>
-        </div>
-    );
+        <Outlet/>
+
+      </div>
+      <Footer/>
+    </div>
+  );
 }

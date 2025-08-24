@@ -1,10 +1,4 @@
-import React, {
-    Dispatch,
-    ReactElement,
-    SetStateAction,
-    useEffect,
-    useState
-} from "react";
+import React, {Dispatch, ReactElement, SetStateAction, useEffect, useState} from "react";
 import {NavigateFunction, useNavigate} from "react-router-dom";
 //import {BookBrief} from "../../../../Model/BookBrief";
 import axios from "axios";
@@ -17,91 +11,91 @@ import {HourglassBottom} from "@mui/icons-material";
 import {GenericItem} from "../../../../Model/GenericItem";
 
 interface AddDBProps {
-    className?: string;
-    alreadyAdded: boolean;
-    item: GenericItem;
+  className?: string;
+  alreadyAdded: boolean;
+  item: GenericItem;
 }
 
 export default function AddDB({className, alreadyAdded, item}: AddDBProps): ReactElement {
-    const [isInDB, setIsInDB]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
-    const [isLoading, setIsLoading]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
-    const [display, setDisplay]: [string, Dispatch<SetStateAction<string>>] = useState<string>("Add to Collection");
-    const [showConfirm, setShowConfirm]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
+  const [isInDB, setIsInDB]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
+  const [isLoading, setIsLoading]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
+  const [display, setDisplay]: [string, Dispatch<SetStateAction<string>>] = useState<string>("Add to Collection");
+  const [showConfirm, setShowConfirm]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [username, jwt, logIn, logOut]: [string | null, string | null, (username: string, password: string) => void, () => void] = useAuth();
 
-    const navigate: NavigateFunction = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
 
-    useEffect((): void => {
-        setIsInDB(alreadyAdded)
-        setDisplay(alreadyAdded ? "Remove from Collection" : "Add to Collection");
-    }, [alreadyAdded]);
+  useEffect((): void => {
+    setIsInDB(alreadyAdded)
+    setDisplay(alreadyAdded ? "Remove from Collection" : "Add to Collection");
+  }, [alreadyAdded]);
 
 
-    async function handleClick(e: any): Promise<void> {
-        e.stopPropagation();
-        setDisplay("Loading...");
-        setIsLoading(true)
-        if (jwt === null || username === null) {
-            navigate('/account/login')
-        } else if (isInDB) {
-            setShowConfirm(true);
-        } else {
-            await addToDB(jwt as string, username as string);
-        }
-        setIsLoading(false)
+  async function handleClick(e: any): Promise<void> {
+    e.stopPropagation();
+    setDisplay("Loading...");
+    setIsLoading(true)
+    if (jwt === null || username === null) {
+      navigate('/account/login')
+    } else if (isInDB) {
+      setShowConfirm(true);
+    } else {
+      await addToDB(jwt as string, username as string);
+    }
+    setIsLoading(false)
 
+  }
+
+  const baseURL: string = `${process.env.REACT_APP_API_URL}/favorites/`;
+
+  async function addToDB(jwt: string, username: string): Promise<void> {
+    const apiURL: string = baseURL + username;
+    console.log(item);
+    try {
+      await axios.post(apiURL, item, {headers: {"Authorization": `Bearer ${jwt}`}});
+      setDisplay("Remove from Collection");
+      setIsInDB(true);
+    } catch (error) {
+      setDisplay("Failed to add");
     }
 
-    const baseURL: string = `${process.env.REACT_APP_API_URL}/favorites/`;
+  }
 
-    async function addToDB(jwt: string, username: string): Promise<void> {
-        const apiURL: string = baseURL + username;
-        console.log(item);
-        try {
-            await axios.post(apiURL, item, {headers: {"Authorization": `Bearer ${jwt}`}});
-            setDisplay("Remove from Collection");
-            setIsInDB(true);
-        } catch (error) {
-            setDisplay("Failed to add");
-        }
+  async function removeFromDB(e: any): Promise<void> {
+    e.stopPropagation();
 
+    const id: string = item.id;
+    const apiURL: string = baseURL + username as string + "/" + id;
+
+    try {
+      await axios.delete(apiURL, {headers: {"Authorization": `Bearer ${jwt as string}`}});
+      setDisplay("Add to Collection");
+      setIsInDB(false);
+
+      if (window.location.pathname.includes("collection")) window.location.reload();
+      else setShowConfirm(false);
+
+    } catch (error) {
+      setDisplay("Failed to remove");
     }
 
-    async function removeFromDB(e: any): Promise<void> {
-        e.stopPropagation();
 
-        const id: string = item.id;
-        const apiURL: string = baseURL + username as string + "/" + id;
+  }
 
-        try {
-            await axios.delete(apiURL, {headers: {"Authorization": `Bearer ${jwt as string}`}});
-            setDisplay("Add to Collection");
-            setIsInDB(false);
+  function cancelRemove(e: any): void {
+    e.stopPropagation();
+    setShowConfirm(false);
+    setDisplay("Remove from Collection");
+  }
 
-            if (window.location.pathname.includes("collection")) window.location.reload();
-            else setShowConfirm(false);
-
-        } catch (error) {
-            setDisplay("Failed to remove");
-        }
-
-
-    }
-
-    function cancelRemove(e: any): void {
-        e.stopPropagation();
-        setShowConfirm(false);
-        setDisplay("Remove from Collection");
-    }
-
-    return (
-        <div>
-            {!showConfirm && <Button size="small" variant="contained"
-                                     color={isInDB ? "error" : "success"}
-                                     startIcon={isLoading ? <HourglassBottom/> : isInDB ? <DeleteIcon/> : <AddIcon/>}
-                                     onClick={handleClick}>{display}</Button>}
-            {showConfirm && <ConfirmRemove handleRemove={removeFromDB} handleCancel={cancelRemove}/>}
-        </div>
-    );
+  return (
+    <div>
+      {!showConfirm && <Button size="small" variant="contained"
+                               color={isInDB ? "error" : "success"}
+                               startIcon={isLoading ? <HourglassBottom/> : isInDB ? <DeleteIcon/> : <AddIcon/>}
+                               onClick={handleClick}>{display}</Button>}
+      {showConfirm && <ConfirmRemove handleRemove={removeFromDB} handleCancel={cancelRemove}/>}
+    </div>
+  );
 }

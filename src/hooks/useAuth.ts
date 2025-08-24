@@ -1,42 +1,42 @@
-import {useState, useEffect, Dispatch, SetStateAction} from 'react';
+import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 
 // Function to check token validity and fetch user data
 export function useAuth(): [string | null, string | null, (username: string, jwt: string) => void, () => void] {
-    const [username, setUsername]: [string | null, Dispatch<SetStateAction<string | null>>] = useState<string | null>(null);
-    const [jwt, setJwt]: [string | null, Dispatch<SetStateAction<string | null>>] = useState<string | null>(null);
+  const [username, setUsername]: [string | null, Dispatch<SetStateAction<string | null>>] = useState<string | null>(null);
+  const [jwt, setJwt]: [string | null, Dispatch<SetStateAction<string | null>>] = useState<string | null>(null);
 
-    function logIn(username: string, jwt: string, reload: boolean = true): void {
-        localStorage.setItem('username', username);
-        localStorage.setItem('jwtToken', jwt);
-        setUsername(username);
-        setJwt(jwt);
-        if (reload) window.location.reload();
+  function logIn(username: string, jwt: string, reload: boolean = true): void {
+    localStorage.setItem('username', username);
+    localStorage.setItem('jwtToken', jwt);
+    setUsername(username);
+    setJwt(jwt);
+    if (reload) window.location.reload();
+  }
+
+  function logOut(reload: boolean = true): void {
+    localStorage.removeItem('username');
+    localStorage.removeItem('jwtToken');
+    setUsername(null);
+    setJwt(null);
+    if (reload) window.location.reload();
+  }
+
+  useEffect((): void => {
+    const storedUsername: string | null = localStorage.getItem('username');
+    const jwtToken: string | null = localStorage.getItem('jwtToken');
+
+    if (jwtToken && storedUsername) {
+      setUsername(storedUsername);
+      setJwt(jwtToken);
+    } else {
+      localStorage.removeItem('username');
+      localStorage.removeItem('jwtToken');
+      setUsername(null);
+      setJwt(null);
     }
-
-    function logOut(reload: boolean = true): void {
-        localStorage.removeItem('username');
-        localStorage.removeItem('jwtToken');
-        setUsername(null);
-        setJwt(null);
-        if (reload) window.location.reload();
-    }
-
-    useEffect((): void => {
-        const storedUsername: string | null = localStorage.getItem('username');
-        const jwtToken: string | null = localStorage.getItem('jwtToken');
-
-        if (jwtToken && storedUsername) {
-            setUsername(storedUsername);
-            setJwt(jwtToken);
-        } else {
-            localStorage.removeItem('username');
-            localStorage.removeItem('jwtToken');
-            setUsername(null);
-            setJwt(null);
-        }
-    }, []);
+  }, []);
 
 
-    return [username, jwt, logIn, logOut];
+  return [username, jwt, logIn, logOut];
 }
